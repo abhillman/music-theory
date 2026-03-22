@@ -18,6 +18,12 @@ static_resources:
                     - name: grpc_services
                       domains: ["*"]
                       routes:
+                        # Reflection → schema registry
+                        - match:
+                            prefix: "/grpc.reflection."
+                          route:
+                            cluster: schema_registry_cluster
+                        # Service routes
                         - match:
                             prefix: "/lilypond.LilyPondService/"
                           route:
@@ -32,6 +38,25 @@ static_resources:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
   clusters:
+    - name: schema_registry_cluster
+      connect_timeout: 5s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      typed_extension_protocol_options:
+        envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+          "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+          explicit_http_config:
+            http2_protocol_options: {}
+      load_assignment:
+        cluster_name: schema_registry_cluster
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: schema-registry
+                      port_value: 50052
+
     - name: lilypond_cluster
       connect_timeout: 5s
       type: STRICT_DNS
