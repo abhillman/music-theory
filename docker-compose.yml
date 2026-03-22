@@ -1,0 +1,48 @@
+services:
+  lilypond-grpc:
+    build: ./lilypond-grpc
+    environment:
+      - LILYPOND_POOL_SIZE=4
+      - LISTEN_ADDR=0.0.0.0:50051
+      - RUST_LOG=lilypond_grpc=info
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "2"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/50051"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  music-theory-grpc:
+    build: ./music-theory-grpc
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import grpc; ch = grpc.insecure_channel('localhost:50051'); grpc.channel_ready_future(ch).result(timeout=5)",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  envoy:
+    image: envoyproxy/envoy:v1.31-latest
+    ports:
+      - "8080:8080" # unified gRPC entrypoint
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+    depends_on:
+      lilypond-grpc:
+        condition: service_healthy
+      music-theory-grpc:
+        condition: service_healthy
+    restart: unless-stopped
