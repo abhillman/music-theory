@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package lilypond;
+
+enum Clef {
+  TREBLE = 0;
+  BASS = 1;
+  ALTO = 2;
+  TENOR = 3;
+  SOPRANO = 4;
+  MEZZO_SOPRANO = 5;
+  BARITONE = 6;
+  PERCUSSION = 7;
+  TAB = 8;
+}
+
+message RenderRequest {
+  Clef clef = 1;
+  string key = 2;       // e.g. "c \major", "d \minor", "bes \major"
+  string notes = 3;     // e.g. "<c e g>1", "c4 d e f"
+}
+
+message RenderResponse {
+  string png_base64 = 1;
+  string error = 2;
+}
+
+service LilyPondService {
+  rpc Render (RenderRequest) returns (RenderResponse);
+}

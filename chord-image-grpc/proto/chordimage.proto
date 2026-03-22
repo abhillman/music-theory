@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package chordimage;
+
+service ChordImageService {
+  rpc RenderRomanNumeral (RenderRomanNumeralRequest) returns (RenderRomanNumeralResponse);
+}
+
+message RenderRomanNumeralRequest {
+  string roman_numeral = 1;
+  string key = 2;  // optional, defaults to "C" via music-theory-grpc
+}
+
+message RenderRomanNumeralResponse {
+  string png_base64 = 1;
+  string error = 2;
+}

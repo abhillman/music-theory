@@ -32,6 +32,11 @@ static_resources:
                             prefix: "/musictheory.MusicTheoryService/"
                           route:
                             cluster: music_theory_cluster
+                        - match:
+                            prefix: "/chordimage.ChordImageService/"
+                          route:
+                            cluster: chord_image_grpc
+                            timeout: 30s
                 http_filters:
                   - name: envoy.filters.http.router
                     typed_config:
@@ -93,4 +98,22 @@ static_resources:
                   address:
                     socket_address:
                       address: music-theory-grpc
+                      port_value: 50051
+    - name: chord_image_grpc
+      connect_timeout: 5s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      typed_extension_protocol_options:
+        envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+          "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+          explicit_http_config:
+            http2_protocol_options: {}
+      load_assignment:
+        cluster_name: chord_image_grpc
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: chord-image-grpc
                       port_value: 50051

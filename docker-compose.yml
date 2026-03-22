@@ -53,6 +53,28 @@ services:
       retries: 3
       start_period: 15s
 
+  chord-image-grpc:
+    build: ./chord-image-grpc
+    environment:
+      - ENVOY_ADDRESS=envoy:8080
+      - LISTEN_ADDR=0.0.0.0:50051
+    restart: unless-stopped
+    depends_on:
+      envoy:
+        condition: service_started
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import grpc; ch = grpc.insecure_channel('localhost:50051'); grpc.channel_ready_future(ch).result(timeout=5)",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
   envoy:
     image: envoyproxy/envoy:v1.31-latest
     ports:

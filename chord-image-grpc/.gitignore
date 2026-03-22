@@ -1,0 +1,70 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# ---- gRPC generated stubs ----
+# These are regenerated from the .proto file, so don't commit them
+music_theory_pb2.py
+music_theory_pb2_grpc.py
+music_theory_pb2.pyi
+
+# ---- IDE / Editor ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# ---- OS junk ----
+.DS_Store
+Thumbs.db
+
+# ---- Testing / Coverage ----
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# ---- Misc ----
+*.log
+# Generated proto bindings
+*_pb2.py
+*_pb2_grpc.py
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
