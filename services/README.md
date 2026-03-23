@@ -88,7 +88,7 @@ grpc_cli ls localhost:8080 musictheory.MusicTheoryService -l
 ```
 
 ```
-filename: music_theory.proto
+filename: musictheory.proto
 package: musictheory
 service MusicTheoryService {
   rpc AnalyzeRomanNumeral(musictheory.RomanNumeralRequest) returns (musictheory.RomanNumeralResponse) {}
@@ -172,7 +172,7 @@ music-theory/
 ├── music-theory-grpc/              # Python gRPC service
 │   ├── Dockerfile
 │   ├── proto/
-│   │   └── music_theory.proto
+│   │   └── musictheory.proto
 │   └── server.py
 └── schema-registry/                # Reflection aggregator
     ├── Dockerfile

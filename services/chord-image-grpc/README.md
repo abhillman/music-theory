@@ -48,7 +48,7 @@ chord-image-grpc/
 └── proto/
     ├── chordimage.proto
     ├── lilypond.proto
-    └── music_theory.proto
+    └── musictheory.proto
 ```
 
 ## Prerequisites
@@ -101,7 +101,7 @@ python -m grpc_tools.protoc \
   --grpc_python_out=. \
   ./proto/chordimage.proto \
   ./proto/lilypond.proto \
-  ./proto/music_theory.proto
+  ./proto/musictheory.proto
 
 # Point at Envoy (or adjust to direct addresses)
 export ENVOY_ADDRESS=localhost:8080

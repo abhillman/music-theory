@@ -5,8 +5,8 @@ from concurrent import futures
 from types import NoneType
 
 import grpc
-import music_theory_pb2
-import music_theory_pb2_grpc
+import musictheory_pb2
+import musictheory_pb2_grpc
 from music21 import chord as m21chord
 from music21 import duration as m21duration
 from music21 import key as m21key
@@ -78,7 +78,7 @@ def key_to_lilypond(k: m21key.Key) -> str:
     return f"\\key {lily_pitch} \\{mode}"
 
 
-class MusicTheoryServicer(music_theory_pb2_grpc.MusicTheoryServiceServicer):
+class MusicTheoryServicer(musictheory_pb2_grpc.MusicTheoryServiceServicer):
     """Implements the MusicTheoryService RPC methods."""
 
     # Mapping of scale degrees to conventional names
@@ -99,7 +99,7 @@ class MusicTheoryServicer(music_theory_pb2_grpc.MusicTheoryServiceServicer):
         if not rn_string:
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
             context.set_details("roman_numeral must not be empty")
-            return music_theory_pb2.RomanNumeralResponse()
+            return musictheory_pb2.RomanNumeralResponse()
 
         try:
             k = m21key.Key(key_string)
@@ -107,10 +107,10 @@ class MusicTheoryServicer(music_theory_pb2_grpc.MusicTheoryServiceServicer):
         except Exception as e:
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
             context.set_details(f"music21 could not parse input: {e}")
-            return music_theory_pb2.RomanNumeralResponse()
+            return musictheory_pb2.RomanNumeralResponse()
 
         # --- Build the response ---
-        resp = music_theory_pb2.RomanNumeralResponse()
+        resp = musictheory_pb2.RomanNumeralResponse()
 
         resp.input_roman_numeral = rn_string
         resp.key = str(k)
@@ -179,7 +179,7 @@ class MusicTheoryServicer(music_theory_pb2_grpc.MusicTheoryServiceServicer):
 
 def serve(port: int = 50051):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    music_theory_pb2_grpc.add_MusicTheoryServiceServicer_to_server(
+    musictheory_pb2_grpc.add_MusicTheoryServiceServicer_to_server(
         MusicTheoryServicer(), server
     )
     listen_addr = f"[::]:{port}"

@@ -18,9 +18,9 @@ dist/
 
 # ---- gRPC generated stubs ----
 # These are regenerated from the .proto file, so don't commit them
-music_theory_pb2.py
-music_theory_pb2_grpc.py
-music_theory_pb2.pyi
+musictheory_pb2.py
+musictheory_pb2_grpc.py
+musictheory_pb2.pyi
 
 # ---- IDE / Editor ----
 .vscode/

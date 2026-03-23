@@ -70,7 +70,7 @@ python client.py "V65" "C"
 ```
 music-theory-grpc/
 ├── proto/
-│   └── music_theory.proto   # Protobuf service & message definitions
+│   └── musictheory.proto   # Protobuf service & message definitions
 ├── server.py                # gRPC server implementation
 ├── client.py                # Example Python client
 ├── requirements.txt         # Python dependencies
@@ -105,7 +105,7 @@ python -m grpc_tools.protoc \
   --python_out=. \
   --pyi_out=. \
   --grpc_python_out=. \
-  proto/music_theory.proto
+  proto/musictheory.proto
 ```
 
 ### Docker
@@ -260,7 +260,7 @@ For the full list, see the
 
 ### Regenerating Proto Stubs
 
-After editing `proto/music_theory.proto`:
+After editing `proto/musictheory.proto`:
 
 ```bash
 python -m grpc_tools.protoc \
@@ -268,7 +268,7 @@ python -m grpc_tools.protoc \
   --python_out=. \
   --pyi_out=. \
   --grpc_python_out=. \
-  proto/music_theory.proto
+  proto/musictheory.proto
 ```
 
 The generated files (`music_theory_pb2.py`, `music_theory_pb2.pyi`,

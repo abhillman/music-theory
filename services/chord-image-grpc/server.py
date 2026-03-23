@@ -8,8 +8,8 @@ import chordimage_pb2_grpc
 import grpc
 import lilypond_pb2
 import lilypond_pb2_grpc
-import music_theory_pb2
-import music_theory_pb2_grpc
+import musictheory_pb2
+import musictheory_pb2_grpc
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ LISTEN_ADDR = os.environ.get("LISTEN_ADDR", "0.0.0.0:50051")
 class ChordImageServicer(chordimage_pb2_grpc.ChordImageServiceServicer):
     def __init__(self):
         self.channel = grpc.insecure_channel(ENVOY_ADDRESS)
-        self.theory_stub = music_theory_pb2_grpc.MusicTheoryServiceStub(self.channel)
+        self.theory_stub = musictheory_pb2_grpc.MusicTheoryServiceStub(self.channel)
         self.lilypond_stub = lilypond_pb2_grpc.LilyPondServiceStub(self.channel)
         logger.info(f"Connected to envoy at {ENVOY_ADDRESS}")
 
@@ -29,7 +29,7 @@ class ChordImageServicer(chordimage_pb2_grpc.ChordImageServiceServicer):
         # 1. Analyze the roman numeral
         try:
             analysis = self.theory_stub.AnalyzeRomanNumeral(
-                music_theory_pb2.RomanNumeralRequest(
+                musictheory_pb2.RomanNumeralRequest(
                     roman_numeral=request.roman_numeral,
                     key=request.key,
                 )

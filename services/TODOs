@@ -1,4 +1,4 @@
-* s/music_theory/musictheory
+* s/musictheory/musictheory
 * proto madness (multiple locations, copying, etc.)
     * likely move over to bazel
 * shift to mono repo, almost certainly

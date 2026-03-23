@@ -12,7 +12,7 @@ RUN python -m grpc_tools.protoc \
     --grpc_python_out=. \
     ./proto/chordimage.proto \
     ./proto/lilypond.proto \
-    ./proto/music_theory.proto
+    ./proto/musictheory.proto
 
 COPY server.py .
 

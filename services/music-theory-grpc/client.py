@@ -3,15 +3,15 @@
 import sys
 
 import grpc
-import music_theory_pb2
-import music_theory_pb2_grpc
+import musictheory_pb2
+import musictheory_pb2_grpc
 
 
 def run(rn_input: str = "V6", key_input: str = "C"):
     with grpc.insecure_channel("localhost:8080") as channel:
-        stub = music_theory_pb2_grpc.MusicTheoryServiceStub(channel)
+        stub = musictheory_pb2_grpc.MusicTheoryServiceStub(channel)
 
-        request = music_theory_pb2.RomanNumeralRequest(
+        request = musictheory_pb2.RomanNumeralRequest(
             roman_numeral=rn_input,
             key=key_input,
         )
