@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY chord-image-grpc/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY proto/ ./proto/
@@ -14,6 +14,6 @@ RUN python -m grpc_tools.protoc \
     ./proto/lilypond.proto \
     ./proto/musictheory.proto
 
-COPY server.py .
+COPY chord-image-grpc/server.py .
 
 CMD ["python", "server.py"]

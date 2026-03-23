@@ -6,9 +6,9 @@ WORKDIR /app
 # Install protobuf compiler
 RUN apt-get update && apt-get install -y protobuf-compiler && rm -rf /var/lib/apt/lists/*
 
-COPY Cargo.toml Cargo.lock build.rs ./
+COPY lilypond-grpc/Cargo.toml lilypond-grpc/Cargo.lock lilypond-grpc/build.rs ./
 COPY proto/ proto/
-COPY src/ src/
+COPY lilypond-grpc/src/ src/
 
 RUN cargo build --release
 

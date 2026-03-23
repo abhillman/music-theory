@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-PROTO_DIR="../services/schema-registry/protos"
+PROTO_DIR="../services/proto"
 OUT_DIR="./src/gen"
 
 mkdir -p "$OUT_DIR"

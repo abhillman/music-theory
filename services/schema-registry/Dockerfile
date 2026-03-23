@@ -2,13 +2,13 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY schema-registry/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY server.py .
-COPY protos/ /app/protos/
+COPY schema-registry/server.py .
+COPY proto/ /app/proto/
 
-ENV PROTOS_DIR=/app/protos
+ENV PROTOS_DIR=/app/proto
 ENV LISTEN_ADDR=0.0.0.0:50052
 ENV MAX_WORKERS=4
 

@@ -19,7 +19,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Python dependencies ──────────────────────────────────────────────
-COPY requirements.txt .
+COPY music-theory-grpc/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # ── Copy proto and generate stubs ────────────────────────────────────
@@ -33,8 +33,8 @@ RUN python -m grpc_tools.protoc \
     proto/musictheory.proto
 
 # ── Copy application code ────────────────────────────────────────────
-COPY server.py .
-COPY client.py .
+COPY music-theory-grpc/server.py .
+COPY music-theory-grpc/client.py .
 
 # ── Pre-warm music21 environment config ──────────────────────────────
 # music21 tries to create a user environment file on first import.

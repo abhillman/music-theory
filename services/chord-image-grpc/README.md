@@ -44,12 +44,10 @@ chord-image-grpc/
 ├── Dockerfile
 ├── README.md
 ├── requirements.txt
-├── server.py
-└── proto/
-    ├── chordimage.proto
-    ├── lilypond.proto
-    └── musictheory.proto
+└── server.py
 ```
+
+> **Note:** Proto definitions live in the shared `../proto/` directory (i.e. `services/proto/`).
 
 ## Prerequisites
 
@@ -68,12 +66,12 @@ From the `chord-image-grpc/` directory:
 
 ```bash
 python -m grpc_tools.protoc \
-  -I./proto \
+  -I../proto \
   --python_out=. \
   --grpc_python_out=. \
-  ./proto/chordimage.proto \
-  ./proto/lilypond.proto \
-  ./proto/musict_heory.proto
+  ../proto/chordimage.proto \
+  ../proto/lilypond.proto \
+  ../proto/musictheory.proto
 ```
 
 This produces six files in the project root:
@@ -96,12 +94,12 @@ Make sure `music-theory-grpc` and `lilypond-grpc` are reachable (either directly
 ```bash
 # Generate bindings (if not already done)
 python -m grpc_tools.protoc \
-  -I./proto \
+  -I../proto \
   --python_out=. \
   --grpc_python_out=. \
-  ./proto/chordimage.proto \
-  ./proto/lilypond.proto \
-  ./proto/musictheory.proto
+  ../proto/chordimage.proto \
+  ../proto/lilypond.proto \
+  ../proto/musictheory.proto
 
 # Point at Envoy (or adjust to direct addresses)
 export ENVOY_ADDRESS=localhost:8080

@@ -160,51 +160,43 @@ open chord.png  # macOS
 
 ```
 music-theory/
-├── docker-compose.yml              # Orchestrates all services
-├── envoy.yaml                      # Envoy proxy routing config
+├── docker-compose.yml
+├── envoy.yaml
 ├── README.md
-├── lilypond-grpc/                  # Rust/Tonic gRPC service
+├── proto/                            # Shared proto definitions (single source of truth)
+│   ├── chordimage.proto
+│   ├── lilypond.proto
+│   └── musictheory.proto
+├── chord-image-grpc/
+│   ├── Dockerfile
+│   └── server.py
+├── lilypond-grpc/
 │   ├── Dockerfile
 │   ├── Cargo.toml
-│   ├── proto/
-│   │   └── lilypond.proto
 │   └── src/
-├── music-theory-grpc/              # Python gRPC service
+├── music-theory-grpc/
 │   ├── Dockerfile
-│   ├── proto/
-│   │   └── musictheory.proto
 │   └── server.py
-└── schema-registry/                # Reflection aggregator
+└── schema-registry/
     ├── Dockerfile
     ├── requirements.txt
-    ├── server.py
-    ├── protos.toml                 # Declares proto sources
-    └── sync_protos.py              # Copies protos at build time
+    └── server.py
 ```
 
 ## Adding a New Service
 
-1. Create your service directory with a `proto/` folder and `Dockerfile`.
+1. Add your `.proto` file to the shared `proto/` directory.
 
-2. Register the proto in `schema-registry/protos.toml`:
+2. Create your service directory with a `Dockerfile`.
 
-    ```toml
-    [[source]]
-    path = "my-new-service/proto/my_service.proto"
-    ```
-
-3. Add the `COPY` line in `schema-registry/Dockerfile`:
-
-    ```dockerfile
-    COPY my-new-service/proto/ /tmp/sources/my-new-service/proto/
-    ```
-
-4. Add the service and Envoy route:
+3. Add the service and Envoy route:
 
     ```yaml
     # docker-compose.yml
     my-new-service:
-      build: ./my-new-service
+      build:
+        context: .
+        dockerfile: my-new-service/Dockerfile
       restart: unless-stopped
     ```
 
@@ -216,7 +208,7 @@ music-theory/
         cluster: my_new_service_cluster
     ```
 
-5. Rebuild:
+4. Rebuild:
 
     ```bash
     docker compose up --build -d
@@ -265,5 +257,5 @@ grpc_cli type localhost:8080 musictheory.RomanNumeralResponse
 | Variable | Default | Description |
 |---|---|---|
 | `LISTEN_ADDR` | `0.0.0.0:50052` | gRPC listen address |
-| `PROTOS_DIR` | `/app/protos` | Directory containing proto files |
+| `PROTOS_DIR` | `/app/proto` | Directory containing proto files |
 | `MAX_WORKERS` | `4` | Thread pool size |

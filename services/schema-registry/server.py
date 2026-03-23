@@ -25,7 +25,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-PROTOS_DIR = os.environ.get("PROTOS_DIR", "/app/protos")
+PROTOS_DIR = os.environ.get("PROTOS_DIR", "/app/proto")
 LISTEN_ADDR = os.environ.get("LISTEN_ADDR", "0.0.0.0:50052")
 MAX_WORKERS = int(os.environ.get("MAX_WORKERS", "4"))
 

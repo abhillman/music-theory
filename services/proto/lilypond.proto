@@ -16,8 +16,8 @@ enum Clef {
 
 message RenderRequest {
   Clef clef = 1;
-  string key = 2;       // e.g. "c \major", "d \minor", "bes \major"
-  string notes = 3;     // e.g. "<c e g>1", "c4 d e f"
+  string key = 2; // e.g. "c \major", "d \minor", "bes \major"; pre-pending with "\key" is also acceptable
+  string notes = 3; // e.g. "<c e g>1", "c4 d e f"
 }
 
 message RenderResponse {
@@ -26,5 +26,5 @@ message RenderResponse {
 }
 
 service LilyPondService {
-  rpc Render (RenderRequest) returns (RenderResponse);
+  rpc Render(RenderRequest) returns (RenderResponse);
 }

@@ -1,6 +1,8 @@
 services:
   lilypond-grpc:
-    build: ./lilypond-grpc
+    build:
+      context: .
+      dockerfile: lilypond-grpc/Dockerfile
     environment:
       - LILYPOND_POOL_SIZE=4
       - LISTEN_ADDR=0.0.0.0:50051
@@ -19,7 +21,9 @@ services:
       start_period: 10s
 
   music-theory-grpc:
-    build: ./music-theory-grpc
+    build:
+      context: .
+      dockerfile: music-theory-grpc/Dockerfile
     restart: unless-stopped
     healthcheck:
       test:
@@ -35,9 +39,11 @@ services:
       start_period: 15s
 
   schema-registry:
-    build: ./schema-registry
+    build:
+      context: .
+      dockerfile: schema-registry/Dockerfile
     environment:
-      - PROTOS_DIR=/app/protos
+      - PROTOS_DIR=/app/proto
       - LISTEN_ADDR=0.0.0.0:50052
     restart: unless-stopped
     healthcheck:
@@ -54,7 +60,9 @@ services:
       start_period: 15s
 
   chord-image-grpc:
-    build: ./chord-image-grpc
+    build:
+      context: .
+      dockerfile: chord-image-grpc/Dockerfile
     environment:
       - ENVOY_ADDRESS=envoy:8080
       - LISTEN_ADDR=0.0.0.0:50051

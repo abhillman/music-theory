@@ -69,8 +69,6 @@ python client.py "V65" "C"
 
 ```
 music-theory-grpc/
-├── proto/
-│   └── musictheory.proto   # Protobuf service & message definitions
 ├── server.py                # gRPC server implementation
 ├── client.py                # Example Python client
 ├── requirements.txt         # Python dependencies
@@ -79,6 +77,9 @@ music-theory-grpc/
 ├── .dockerignore
 └── README.md
 ```
+
+> **Note:** Protobuf definitions live in the shared `../proto/` directory
+> (`music-theory/services/proto/`), not in this service's tree.
 
 ---
 
@@ -101,11 +102,11 @@ pip install -r requirements.txt
 
 # 3. Generate gRPC stubs from the proto file
 python -m grpc_tools.protoc \
-  -I proto \
+  -I ../proto \
   --python_out=. \
   --pyi_out=. \
   --grpc_python_out=. \
-  proto/musictheory.proto
+  ../proto/musictheory.proto
 ```
 
 ### Docker
@@ -260,15 +261,15 @@ For the full list, see the
 
 ### Regenerating Proto Stubs
 
-After editing `proto/musictheory.proto`:
+After editing `../proto/musictheory.proto`:
 
 ```bash
 python -m grpc_tools.protoc \
-  -I proto \
+  -I ../proto \
   --python_out=. \
   --pyi_out=. \
   --grpc_python_out=. \
-  proto/musictheory.proto
+  ../proto/musictheory.proto
 ```
 
 The generated files (`music_theory_pb2.py`, `music_theory_pb2.pyi`,
