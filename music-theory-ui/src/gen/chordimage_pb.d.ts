@@ -46,3 +46,25 @@ export namespace RenderRomanNumeralResponse {
   };
 }
 
+export class RenderRomanNumeralSvgResponse extends jspb.Message {
+  getSvg(): string;
+  setSvg(value: string): RenderRomanNumeralSvgResponse;
+
+  getError(): string;
+  setError(value: string): RenderRomanNumeralSvgResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RenderRomanNumeralSvgResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: RenderRomanNumeralSvgResponse): RenderRomanNumeralSvgResponse.AsObject;
+  static serializeBinaryToWriter(message: RenderRomanNumeralSvgResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RenderRomanNumeralSvgResponse;
+  static deserializeBinaryFromReader(message: RenderRomanNumeralSvgResponse, reader: jspb.BinaryReader): RenderRomanNumeralSvgResponse;
+}
+
+export namespace RenderRomanNumeralSvgResponse {
+  export type AsObject = {
+    svg: string;
+    error: string;
+  };
+}
+

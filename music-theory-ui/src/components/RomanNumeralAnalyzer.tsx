@@ -4,6 +4,20 @@ import { RomanNumeralRequest } from "../gen/musictheory_pb";
 import { RenderRomanNumeralRequest } from "../gen/chordimage_pb";
 import "./RomanNumeralAnalyzer.css";
 
+/** Double the width and height attributes in an SVG string. */
+function scaleSvg(svg: string, factor: number = 2): string {
+  return svg.replace(
+    /(<svg[^>]*?\b)(width)="([^"]+)"([^>]*?\b)(height)="([^"]+)"/i,
+    (_match, pre, wAttr, wVal, mid, hAttr, hVal) => {
+      const w = parseFloat(wVal);
+      const h = parseFloat(hVal);
+      const wUnit = wVal.replace(/[\d.]+/, "");
+      const hUnit = hVal.replace(/[\d.]+/, "");
+      return `${pre}${wAttr}="${w * factor}${wUnit}"${mid}${hAttr}="${h * factor}${hUnit}"`;
+    },
+  );
+}
+
 interface AnalysisResult {
   inputRomanNumeral: string;
   key: string;
@@ -62,7 +76,7 @@ export default function RomanNumeralAnalyzer() {
   const [romanNumeral, setRomanNumeral] = useState("V");
   const [key, setKey] = useState("C");
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
-  const [chordImage, setChordImage] = useState<string | null>(null);
+  const [chordSvg, setChordSvg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -72,7 +86,7 @@ export default function RomanNumeralAnalyzer() {
     setLoading(true);
     setError(null);
     setAnalysis(null);
-    setChordImage(null);
+    setChordSvg(null);
 
     try {
       // ── (a) Analyze Roman Numeral ──────────────────────────────
@@ -121,19 +135,19 @@ export default function RomanNumeralAnalyzer() {
 
       setAnalysis(analyzeRes);
 
-      // ── (b) Render Chord Image ─────────────────────────────────
+      // ── (b) Render Chord SVG ───────────────────────────────────
       const imageReq = new RenderRomanNumeralRequest();
       imageReq.setRomanNumeral(romanNumeral.trim());
       imageReq.setKey(key);
 
-      const imageRes = await new Promise<string>((resolve, reject) => {
-        chordImageClient.renderRomanNumeral(imageReq, {}, (err, res) => {
+      const svgRes = await new Promise<string>((resolve, reject) => {
+        chordImageClient.renderRomanNumeralSvg(imageReq, {}, (err, res) => {
           if (err) {
             reject(new Error(err.message));
             return;
           }
           if (!res) {
-            reject(new Error("Empty image response"));
+            reject(new Error("Empty SVG response"));
             return;
           }
           const errMsg = res.getError();
@@ -141,11 +155,11 @@ export default function RomanNumeralAnalyzer() {
             reject(new Error(errMsg));
             return;
           }
-          resolve(res.getPngBase64());
+          resolve(res.getSvg());
         });
       });
 
-      setChordImage(imageRes);
+      setChordSvg(scaleSvg(svgRes, 2));
     } catch (e: any) {
       setError(e.message || "Unknown error");
     } finally {
@@ -198,14 +212,12 @@ export default function RomanNumeralAnalyzer() {
 
       {analysis && (
         <div className="results">
-          {/* ── Chord Image ──────────────────────────────────────── */}
-          {chordImage && (
-            <div className="chord-image">
-              <img
-                src={`data:image/png;base64,${chordImage}`}
-                alt={`Notation for ${analysis.inputRomanNumeral} in ${analysis.key}`}
-              />
-            </div>
+          {/* ── Chord SVG ────────────────────────────────────────── */}
+          {chordSvg && (
+            <div
+              className="chord-image"
+              dangerouslySetInnerHTML={{ __html: chordSvg }}
+            />
           )}
 
           {/* ── Summary Header ───────────────────────────────────── */}

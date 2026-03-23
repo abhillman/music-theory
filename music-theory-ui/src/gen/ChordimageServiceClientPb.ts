@@ -82,5 +82,48 @@ export class ChordImageServiceClient {
     this.methodDescriptorRenderRomanNumeral);
   }
 
+  methodDescriptorRenderRomanNumeralSvg = new grpcWeb.MethodDescriptor(
+    '/chordimage.ChordImageService/RenderRomanNumeralSvg',
+    grpcWeb.MethodType.UNARY,
+    chordimage_pb.RenderRomanNumeralRequest,
+    chordimage_pb.RenderRomanNumeralSvgResponse,
+    (request: chordimage_pb.RenderRomanNumeralRequest) => {
+      return request.serializeBinary();
+    },
+    chordimage_pb.RenderRomanNumeralSvgResponse.deserializeBinary
+  );
+
+  renderRomanNumeralSvg(
+    request: chordimage_pb.RenderRomanNumeralRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<chordimage_pb.RenderRomanNumeralSvgResponse>;
+
+  renderRomanNumeralSvg(
+    request: chordimage_pb.RenderRomanNumeralRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: chordimage_pb.RenderRomanNumeralSvgResponse) => void): grpcWeb.ClientReadableStream<chordimage_pb.RenderRomanNumeralSvgResponse>;
+
+  renderRomanNumeralSvg(
+    request: chordimage_pb.RenderRomanNumeralRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: chordimage_pb.RenderRomanNumeralSvgResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/chordimage.ChordImageService/RenderRomanNumeralSvg',
+        request,
+        metadata || {},
+        this.methodDescriptorRenderRomanNumeralSvg,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/chordimage.ChordImageService/RenderRomanNumeralSvg',
+    request,
+    metadata || {},
+    this.methodDescriptorRenderRomanNumeralSvg);
+  }
+
 }
 
