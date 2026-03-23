@@ -19,6 +19,21 @@ interface FieldInfo {
 }
 
 const FIELD_INFO: Record<string, FieldInfo> = {
+  /* ── Most useful: identity & naming ─────────────────────────── */
+  commonName: {
+    label: "Common Name",
+    summary: "The standard name for this chord type (e.g. 'major triad').",
+    description:
+      "The common name describes the chord quality in plain English — for example 'major triad', 'minor seventh chord', or 'dominant seventh chord'. It is determined by the intervallic structure of the chord without reference to a specific root pitch.",
+    url: `${CHORD_DOC}.commonName`,
+  },
+  figureAndKey: {
+    label: "Figure & Key",
+    summary: "The full Roman numeral figure in its key context.",
+    description:
+      "A human-readable string combining the Roman numeral figure with its key, e.g. 'V in C major' or 'viio in A minor'. This is the most concise way to describe the chord's harmonic function and context.",
+    url: `${ROMAN_DOC}.figureAndKey`,
+  },
   pitches: {
     label: "Pitches",
     summary: "The note names that make up this chord.",
@@ -26,6 +41,14 @@ const FIELD_INFO: Record<string, FieldInfo> = {
       "Returns a tuple of all Pitch objects in this Chord, ordered from lowest to highest. Each pitch is identified by its letter name and optional accidental (e.g. G, B, D for a G major triad).",
     url: `${CHORD_DOC}.pitches`,
   },
+  quality: {
+    label: "Quality",
+    summary: "Major, minor, diminished, or augmented character.",
+    description:
+      "The quality describes the intervallic makeup of the underlying triad: major (M3 + m3), minor (m3 + M3), diminished (m3 + m3), augmented (M3 + M3), or 'other' for non-tertian sonorities. The 'implied quality' comes from the Roman numeral figure itself.",
+    url: `${CHORD_DOC}.quality`,
+  },
+  /* ── Core pitch identity ────────────────────────────────────── */
   root: {
     label: "Root",
     summary: "The fundamental note the chord is built upon.",
@@ -40,12 +63,27 @@ const FIELD_INFO: Record<string, FieldInfo> = {
       "The bass is simply the lowest pitch in the chord voicing. In root position, the bass and root are the same note. In inversions, the bass is a different chord tone (the third, fifth, or seventh).",
     url: `${CHORD_DOC}.bass`,
   },
-  quality: {
-    label: "Quality",
-    summary: "Major, minor, diminished, or augmented character.",
+  chordTones: {
+    label: "Chord Tones",
+    summary: "Individual members of the chord by function.",
     description:
-      "The quality describes the intervallic makeup of the underlying triad: major (M3 + m3), minor (m3 + M3), diminished (m3 + m3), augmented (M3 + M3), or 'other' for non-tertian sonorities. The 'implied quality' comes from the Roman numeral figure itself.",
-    url: `${CHORD_DOC}.quality`,
+      "Identifies each pitch by its role within the chord: root (1st), third (3rd), fifth (5th), and seventh (7th) if present. These are diatonic steps above the root, not scale degrees.",
+    url: `${CHORD_DOC}.third`,
+  },
+  /* ── Voicing & inversion ────────────────────────────────────── */
+  inversion: {
+    label: "Inversion",
+    summary: "Which chord tone is in the bass voice.",
+    description:
+      "Root position means the root is the lowest note. First inversion puts the third in the bass, second inversion puts the fifth in the bass, and third inversion (for seventh chords) puts the seventh in the bass. The figured-bass numbers indicate intervals above the bass.",
+    url: `${CHORD_DOC}.inversionText`,
+  },
+  figuredBass: {
+    label: "Figured Bass",
+    summary: "Shorthand numbers indicating intervals above the bass note.",
+    description:
+      "Figured bass is a Baroque-era shorthand where numbers below a bass note indicate the intervals above it. Root-position triads are '5,3' (usually omitted), first-inversion triads are '6,3' (abbreviated '6'), and seventh chords use figures like '7', '6,5', '4,3', or '4,2' depending on inversion.",
+    url: `${ROMAN_DOC}.figureAndKey`,
   },
   intervals: {
     label: "Intervals",
@@ -54,20 +92,6 @@ const FIELD_INFO: Record<string, FieldInfo> = {
       "Shows the interval between the bass and every other pitch in the chord, using standard abbreviations like M3 (major third), P5 (perfect fifth), m7 (minor seventh), etc. This is closely related to figured-bass notation.",
     url: `${CHORD_DOC}.annotateIntervals`,
   },
-  inversion: {
-    label: "Inversion",
-    summary: "Which chord tone is in the bass voice.",
-    description:
-      "Root position means the root is the lowest note. First inversion puts the third in the bass, second inversion puts the fifth in the bass, and third inversion (for seventh chords) puts the seventh in the bass. The figured-bass numbers indicate intervals above the bass.",
-    url: `${CHORD_DOC}.inversionText`,
-  },
-  chordTones: {
-    label: "Chord Tones",
-    summary: "Individual members of the chord by function.",
-    description:
-      "Identifies each pitch by its role within the chord: root (1st), third (3rd), fifth (5th), and seventh (7th) if present. These are diatonic steps above the root, not scale degrees.",
-    url: `${CHORD_DOC}.third`,
-  },
   semitones: {
     label: "Semitones",
     summary: "Half-step distances from the root for each chord step.",
@@ -75,6 +99,7 @@ const FIELD_INFO: Record<string, FieldInfo> = {
       "Shows the number of semitones (mod 12) above the root for each present chord step. For example, a major triad returns [0, 4, 7] — 0 for the root, 4 half-steps to the major third, and 7 to the perfect fifth.",
     url: `${CHORD_DOC}.semitonesFromChordStep`,
   },
+  /* ── Harmonic function ──────────────────────────────────────── */
   scaleDegree: {
     label: "Scale Degree",
     summary: "Position of the chord's root within the key.",
@@ -89,6 +114,14 @@ const FIELD_INFO: Record<string, FieldInfo> = {
       "A heuristic score from music21 representing relative functional importance. V7 scores ~80 (strong dominant pull), while vi6 scores ~10 (coloristic). For secondary dominants like V/vi, scores are multiplied — e.g., V (70) × vi (40) / 100 = 28.",
     url: `${ROMAN_DOC}.functionalityScore`,
   },
+  flags: {
+    label: "Flags",
+    summary: "Boolean chord-type classifications.",
+    description:
+      "A set of true/false tests that identify specific chord types: major triad, minor triad, dominant seventh, diminished seventh, half-diminished seventh, augmented sixth, augmented triad, diminished triad, Neapolitan, and consonance. Each flag is determined by the chord's intervallic structure and spelling.",
+    url: `${CHORD_DOC}.isMajorTriad`,
+  },
+  /* ── Set theory ─────────────────────────────────────────────── */
   pitchClasses: {
     label: "Pitch Classes",
     summary: "Numeric representation of each pitch (0 = C, 1 = C♯, … 11 = B).",
@@ -117,6 +150,7 @@ const FIELD_INFO: Record<string, FieldInfo> = {
       "A six-element vector counting how many of each interval class (ic1 through ic6) the chord contains. For example, a major triad <001110> has one minor third (ic3), one major third (ic4), and one perfect fifth (ic5). Z-related sets share the same vector.",
     url: `${CHORD_DOC}.intervalVector`,
   },
+  /* ── Engraving ──────────────────────────────────────────────── */
   lilypond: {
     label: "LilyPond",
     summary: "The chord in LilyPond music engraving syntax.",
@@ -130,13 +164,6 @@ const FIELD_INFO: Record<string, FieldInfo> = {
     description:
       "The \\key command in LilyPond format, e.g. '\\key c \\major'. This can be placed at the beginning of a LilyPond score to set the key signature for the notation.",
     url: LILY_DOC,
-  },
-  flags: {
-    label: "Flags",
-    summary: "Boolean chord-type classifications.",
-    description:
-      "A set of true/false tests that identify specific chord types: major triad, minor triad, dominant seventh, diminished seventh, half-diminished seventh, augmented sixth, augmented triad, diminished triad, Neapolitan, and consonance. Each flag is determined by the chord's intervallic structure and spelling.",
-    url: `${CHORD_DOC}.isMajorTriad`,
   },
 };
 
@@ -787,6 +814,33 @@ export default function RomanNumeralAnalyzer() {
           {/* ── Detail Table ─────────────────────────────────────── */}
           <table className="detail-table">
             <tbody>
+              {/* ── Identity & Naming ────────────────────────────── */}
+              {analysis.commonName && (
+                <tr
+                  className={sidebarField === "commonName" ? "row--active" : ""}
+                >
+                  <FieldLabel
+                    field="commonName"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>{analysis.commonName}</td>
+                </tr>
+              )}
+              {analysis.figureAndKey && (
+                <tr
+                  className={
+                    sidebarField === "figureAndKey" ? "row--active" : ""
+                  }
+                >
+                  <FieldLabel
+                    field="figureAndKey"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>{analysis.figureAndKey}</td>
+                </tr>
+              )}
               <tr className={sidebarField === "pitches" ? "row--active" : ""}>
                 <FieldLabel
                   field="pitches"
@@ -795,6 +849,21 @@ export default function RomanNumeralAnalyzer() {
                 />
                 <td>{analysis.pitchNames.join(" – ")}</td>
               </tr>
+              <tr className={sidebarField === "quality" ? "row--active" : ""}>
+                <FieldLabel
+                  field="quality"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
+                <td>
+                  {analysis.quality}
+                  {analysis.impliedQuality &&
+                    analysis.impliedQuality !== analysis.quality &&
+                    ` (implied: ${analysis.impliedQuality})`}
+                </td>
+              </tr>
+
+              {/* ── Core pitch identity ──────────────────────────── */}
               <tr className={sidebarField === "root" ? "row--active" : ""}>
                 <FieldLabel
                   field="root"
@@ -810,43 +879,6 @@ export default function RomanNumeralAnalyzer() {
                   onSelect={openSidebar}
                 />
                 <td>{analysis.bassPitch}</td>
-              </tr>
-              <tr className={sidebarField === "quality" ? "row--active" : ""}>
-                <FieldLabel
-                  field="quality"
-                  activeField={sidebarField}
-                  onSelect={openSidebar}
-                />
-                <td>
-                  {analysis.quality}
-                  {analysis.impliedQuality &&
-                    analysis.impliedQuality !== analysis.quality &&
-                    ` (implied: ${analysis.impliedQuality})`}
-                </td>
-              </tr>
-              {analysis.intervalsFromBass.length > 0 && (
-                <tr
-                  className={sidebarField === "intervals" ? "row--active" : ""}
-                >
-                  <FieldLabel
-                    field="intervals"
-                    activeField={sidebarField}
-                    onSelect={openSidebar}
-                  />
-                  <td>{analysis.intervalsFromBass.join(", ")}</td>
-                </tr>
-              )}
-              <tr className={sidebarField === "inversion" ? "row--active" : ""}>
-                <FieldLabel
-                  field="inversion"
-                  activeField={sidebarField}
-                  onSelect={openSidebar}
-                />
-                <td>
-                  {analysis.inversionText}
-                  {analysis.figuredBassString &&
-                    ` (${analysis.figuredBassString})`}
-                </td>
               </tr>
               {/* ── Chord Tones ──────────────────────────────────── */}
               {(analysis.thirdPitch ||
@@ -872,6 +904,42 @@ export default function RomanNumeralAnalyzer() {
                   </td>
                 </tr>
               )}
+
+              {/* ── Voicing & Inversion ──────────────────────────── */}
+              <tr className={sidebarField === "inversion" ? "row--active" : ""}>
+                <FieldLabel
+                  field="inversion"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
+                <td>{analysis.inversionText}</td>
+              </tr>
+              {analysis.figuredBassString && (
+                <tr
+                  className={
+                    sidebarField === "figuredBass" ? "row--active" : ""
+                  }
+                >
+                  <FieldLabel
+                    field="figuredBass"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>{analysis.figuredBassString}</td>
+                </tr>
+              )}
+              {analysis.intervalsFromBass.length > 0 && (
+                <tr
+                  className={sidebarField === "intervals" ? "row--active" : ""}
+                >
+                  <FieldLabel
+                    field="intervals"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>{analysis.intervalsFromBass.join(", ")}</td>
+                </tr>
+              )}
               {analysis.semitonesFromRoot.length > 0 && (
                 <tr
                   className={sidebarField === "semitones" ? "row--active" : ""}
@@ -884,6 +952,8 @@ export default function RomanNumeralAnalyzer() {
                   <td>[{analysis.semitonesFromRoot.join(", ")}]</td>
                 </tr>
               )}
+
+              {/* ── Harmonic Function ────────────────────────────── */}
               <tr
                 className={sidebarField === "scaleDegree" ? "row--active" : ""}
               >
@@ -917,78 +987,6 @@ export default function RomanNumeralAnalyzer() {
                     <span className="functionality-score">
                       {analysis.functionalityScore}
                     </span>
-                  </td>
-                </tr>
-              )}
-              <tr
-                className={sidebarField === "pitchClasses" ? "row--active" : ""}
-              >
-                <FieldLabel
-                  field="pitchClasses"
-                  activeField={sidebarField}
-                  onSelect={openSidebar}
-                />
-                <td>[{analysis.pitchClasses.join(", ")}]</td>
-              </tr>
-              {analysis.primeForm.length > 0 && (
-                <tr
-                  className={sidebarField === "primeForm" ? "row--active" : ""}
-                >
-                  <FieldLabel
-                    field="primeForm"
-                    activeField={sidebarField}
-                    onSelect={openSidebar}
-                  />
-                  <td>[{analysis.primeForm.join(", ")}]</td>
-                </tr>
-              )}
-              <tr
-                className={sidebarField === "forteClass" ? "row--active" : ""}
-              >
-                <FieldLabel
-                  field="forteClass"
-                  activeField={sidebarField}
-                  onSelect={openSidebar}
-                />
-                <td>{analysis.forteClass || "—"}</td>
-              </tr>
-              {analysis.intervalVector.length > 0 && (
-                <tr
-                  className={
-                    sidebarField === "intervalVector" ? "row--active" : ""
-                  }
-                >
-                  <FieldLabel
-                    field="intervalVector"
-                    activeField={sidebarField}
-                    onSelect={openSidebar}
-                  />
-                  <td>&lt;{analysis.intervalVector.join("")}&gt;</td>
-                </tr>
-              )}
-              <tr className={sidebarField === "lilypond" ? "row--active" : ""}>
-                <FieldLabel
-                  field="lilypond"
-                  activeField={sidebarField}
-                  onSelect={openSidebar}
-                />
-                <td>
-                  <code>{analysis.lilypondChord}</code>
-                </td>
-              </tr>
-              {analysis.lilypondKey && (
-                <tr
-                  className={
-                    sidebarField === "lilypondKey" ? "row--active" : ""
-                  }
-                >
-                  <FieldLabel
-                    field="lilypondKey"
-                    activeField={sidebarField}
-                    onSelect={openSidebar}
-                  />
-                  <td>
-                    <code>{analysis.lilypondKey}</code>
                   </td>
                 </tr>
               )}
@@ -1047,6 +1045,82 @@ export default function RomanNumeralAnalyzer() {
                     {analysis.isConsonant && (
                       <span className="flag flag-consonant">Consonant</span>
                     )}
+                  </td>
+                </tr>
+              )}
+
+              {/* ── Set Theory ───────────────────────────────────── */}
+              <tr
+                className={sidebarField === "pitchClasses" ? "row--active" : ""}
+              >
+                <FieldLabel
+                  field="pitchClasses"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
+                <td>[{analysis.pitchClasses.join(", ")}]</td>
+              </tr>
+              {analysis.primeForm.length > 0 && (
+                <tr
+                  className={sidebarField === "primeForm" ? "row--active" : ""}
+                >
+                  <FieldLabel
+                    field="primeForm"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>[{analysis.primeForm.join(", ")}]</td>
+                </tr>
+              )}
+              <tr
+                className={sidebarField === "forteClass" ? "row--active" : ""}
+              >
+                <FieldLabel
+                  field="forteClass"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
+                <td>{analysis.forteClass || "—"}</td>
+              </tr>
+              {analysis.intervalVector.length > 0 && (
+                <tr
+                  className={
+                    sidebarField === "intervalVector" ? "row--active" : ""
+                  }
+                >
+                  <FieldLabel
+                    field="intervalVector"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>&lt;{analysis.intervalVector.join("")}&gt;</td>
+                </tr>
+              )}
+
+              {/* ── Engraving ────────────────────────────────────── */}
+              <tr className={sidebarField === "lilypond" ? "row--active" : ""}>
+                <FieldLabel
+                  field="lilypond"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
+                <td>
+                  <code>{analysis.lilypondChord}</code>
+                </td>
+              </tr>
+              {analysis.lilypondKey && (
+                <tr
+                  className={
+                    sidebarField === "lilypondKey" ? "row--active" : ""
+                  }
+                >
+                  <FieldLabel
+                    field="lilypondKey"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>
+                    <code>{analysis.lilypondKey}</code>
                   </td>
                 </tr>
               )}
