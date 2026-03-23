@@ -1,0 +1,16 @@
+* update the UX to be able to specify the clef
+* update the UX to either intelligently:
+    * select the clef based on the key signature / where the notes are located
+    * change the octave based on the key signature / where the notes are located
+        * ie so they fit more nicely on the staff
+* add a functionality to walk through the well tempered clavier in c
+    * add other pieces? do we need some kind of highlight functionality?
+* update the ux to call the render service if the user makes changes without
+    needing to re-call the music theory service
+* add quiz functionality
+    * need to be able to specify:
+        * key signatures
+        * clefs
+    * qualities of chords
+    * inversions of chords
+* add additional information about chords from proto that comes from the music theory service
