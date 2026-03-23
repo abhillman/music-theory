@@ -56,4 +56,44 @@ message RomanNumeralResponse {
 
   // LilyPond-formatted key string, e.g. "\key c \major"
   string lilypond_key = 22;
+
+  // Intervals from bass note, e.g. ["M3", "P5"]
+  repeated string intervals_from_bass = 23;
+
+  // Pitched common name, e.g. "G-major triad"
+  string pitched_common_name = 24;
+
+  // Set-theory prime form, e.g. [0, 3, 7]
+  repeated int32 prime_form = 25;
+
+  // Interval vector (6-element), e.g. [0, 0, 1, 1, 1, 0]
+  repeated int32 interval_vector = 26;
+
+  // Full figure and key string, e.g. "V in C major"
+  string figure_and_key = 27;
+
+  // Functional importance score (1–100)
+  int32 functionality_score = 28;
+
+  // Additional chord-type flags
+  bool is_neapolitan = 29;
+  bool is_half_diminished_seventh = 30;
+  bool is_augmented_triad = 31;
+  bool is_diminished_triad = 32;
+  bool is_consonant = 33;
+
+  // Whether it's strictly a triad or strictly a seventh chord
+  bool is_triad = 34;
+  bool is_seventh = 35;
+
+  // Implied quality from the figure notation
+  string implied_quality = 36;
+
+  // Semitones from root for each chord step, e.g. [0, 4, 7]
+  repeated int32 semitones_from_root = 37;
+
+  // The chord's third, fifth, seventh pitch names (if present)
+  string third_pitch = 38;
+  string fifth_pitch = 39;
+  string seventh_pitch = 40;
 }

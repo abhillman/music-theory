@@ -225,7 +225,7 @@ proto.musictheory.RomanNumeralRequest.prototype.setKey = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.musictheory.RomanNumeralResponse.repeatedFields_ = [6,8,19];
+proto.musictheory.RomanNumeralResponse.repeatedFields_ = [6,8,19,23,25,26,37];
 
 
 
@@ -279,7 +279,25 @@ scaleDegreeName: jspb.Message.getFieldWithDefault(msg, 18, ""),
 pitchClassesList: (f = jspb.Message.getRepeatedField(msg, 19)) == null ? undefined : f,
 forteClass: jspb.Message.getFieldWithDefault(msg, 20, ""),
 lilypondChord: jspb.Message.getFieldWithDefault(msg, 21, ""),
-lilypondKey: jspb.Message.getFieldWithDefault(msg, 22, "")
+lilypondKey: jspb.Message.getFieldWithDefault(msg, 22, ""),
+intervalsFromBassList: (f = jspb.Message.getRepeatedField(msg, 23)) == null ? undefined : f,
+pitchedCommonName: jspb.Message.getFieldWithDefault(msg, 24, ""),
+primeFormList: (f = jspb.Message.getRepeatedField(msg, 25)) == null ? undefined : f,
+intervalVectorList: (f = jspb.Message.getRepeatedField(msg, 26)) == null ? undefined : f,
+figureAndKey: jspb.Message.getFieldWithDefault(msg, 27, ""),
+functionalityScore: jspb.Message.getFieldWithDefault(msg, 28, 0),
+isNeapolitan: jspb.Message.getBooleanFieldWithDefault(msg, 29, false),
+isHalfDiminishedSeventh: jspb.Message.getBooleanFieldWithDefault(msg, 30, false),
+isAugmentedTriad: jspb.Message.getBooleanFieldWithDefault(msg, 31, false),
+isDiminishedTriad: jspb.Message.getBooleanFieldWithDefault(msg, 32, false),
+isConsonant: jspb.Message.getBooleanFieldWithDefault(msg, 33, false),
+isTriad: jspb.Message.getBooleanFieldWithDefault(msg, 34, false),
+isSeventh: jspb.Message.getBooleanFieldWithDefault(msg, 35, false),
+impliedQuality: jspb.Message.getFieldWithDefault(msg, 36, ""),
+semitonesFromRootList: (f = jspb.Message.getRepeatedField(msg, 37)) == null ? undefined : f,
+thirdPitch: jspb.Message.getFieldWithDefault(msg, 38, ""),
+fifthPitch: jspb.Message.getFieldWithDefault(msg, 39, ""),
+seventhPitch: jspb.Message.getFieldWithDefault(msg, 40, "")
   };
 
   if (includeInstance) {
@@ -401,6 +419,75 @@ proto.musictheory.RomanNumeralResponse.deserializeBinaryFromReader = function(ms
     case 22:
       var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setLilypondKey(value);
+      break;
+    case 23:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.addIntervalsFromBass(value);
+      break;
+    case 24:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.setPitchedCommonName(value);
+      break;
+    case 25:
+      reader.readPackableInt32Into(msg.getPrimeFormList());
+      break;
+    case 26:
+      reader.readPackableInt32Into(msg.getIntervalVectorList());
+      break;
+    case 27:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.setFigureAndKey(value);
+      break;
+    case 28:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setFunctionalityScore(value);
+      break;
+    case 29:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsNeapolitan(value);
+      break;
+    case 30:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsHalfDiminishedSeventh(value);
+      break;
+    case 31:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsAugmentedTriad(value);
+      break;
+    case 32:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsDiminishedTriad(value);
+      break;
+    case 33:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsConsonant(value);
+      break;
+    case 34:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsTriad(value);
+      break;
+    case 35:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsSeventh(value);
+      break;
+    case 36:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.setImpliedQuality(value);
+      break;
+    case 37:
+      reader.readPackableInt32Into(msg.getSemitonesFromRootList());
+      break;
+    case 38:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.setThirdPitch(value);
+      break;
+    case 39:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.setFifthPitch(value);
+      break;
+    case 40:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.setSeventhPitch(value);
       break;
     default:
       reader.skipField();
@@ -582,6 +669,132 @@ proto.musictheory.RomanNumeralResponse.serializeBinaryToWriter = function(messag
   if (f.length > 0) {
     writer.writeString(
       22,
+      f
+    );
+  }
+  f = message.getIntervalsFromBassList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      23,
+      f
+    );
+  }
+  f = message.getPitchedCommonName();
+  if (f.length > 0) {
+    writer.writeString(
+      24,
+      f
+    );
+  }
+  f = message.getPrimeFormList();
+  if (f.length > 0) {
+    writer.writePackedInt32(
+      25,
+      f
+    );
+  }
+  f = message.getIntervalVectorList();
+  if (f.length > 0) {
+    writer.writePackedInt32(
+      26,
+      f
+    );
+  }
+  f = message.getFigureAndKey();
+  if (f.length > 0) {
+    writer.writeString(
+      27,
+      f
+    );
+  }
+  f = message.getFunctionalityScore();
+  if (f !== 0) {
+    writer.writeInt32(
+      28,
+      f
+    );
+  }
+  f = message.getIsNeapolitan();
+  if (f) {
+    writer.writeBool(
+      29,
+      f
+    );
+  }
+  f = message.getIsHalfDiminishedSeventh();
+  if (f) {
+    writer.writeBool(
+      30,
+      f
+    );
+  }
+  f = message.getIsAugmentedTriad();
+  if (f) {
+    writer.writeBool(
+      31,
+      f
+    );
+  }
+  f = message.getIsDiminishedTriad();
+  if (f) {
+    writer.writeBool(
+      32,
+      f
+    );
+  }
+  f = message.getIsConsonant();
+  if (f) {
+    writer.writeBool(
+      33,
+      f
+    );
+  }
+  f = message.getIsTriad();
+  if (f) {
+    writer.writeBool(
+      34,
+      f
+    );
+  }
+  f = message.getIsSeventh();
+  if (f) {
+    writer.writeBool(
+      35,
+      f
+    );
+  }
+  f = message.getImpliedQuality();
+  if (f.length > 0) {
+    writer.writeString(
+      36,
+      f
+    );
+  }
+  f = message.getSemitonesFromRootList();
+  if (f.length > 0) {
+    writer.writePackedInt32(
+      37,
+      f
+    );
+  }
+  f = message.getThirdPitch();
+  if (f.length > 0) {
+    writer.writeString(
+      38,
+      f
+    );
+  }
+  f = message.getFifthPitch();
+  if (f.length > 0) {
+    writer.writeString(
+      39,
+      f
+    );
+  }
+  f = message.getSeventhPitch();
+  if (f.length > 0) {
+    writer.writeString(
+      40,
       f
     );
   }
@@ -1038,6 +1251,406 @@ proto.musictheory.RomanNumeralResponse.prototype.getLilypondKey = function() {
  */
 proto.musictheory.RomanNumeralResponse.prototype.setLilypondKey = function(value) {
   return jspb.Message.setProto3StringField(this, 22, value);
+};
+
+
+/**
+ * repeated string intervals_from_bass = 23;
+ * @return {!Array<string>}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getIntervalsFromBassList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 23));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setIntervalsFromBassList = function(value) {
+  return jspb.Message.setField(this, 23, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.addIntervalsFromBass = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 23, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.clearIntervalsFromBassList = function() {
+  return this.setIntervalsFromBassList([]);
+};
+
+
+/**
+ * optional string pitched_common_name = 24;
+ * @return {string}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getPitchedCommonName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 24, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setPitchedCommonName = function(value) {
+  return jspb.Message.setProto3StringField(this, 24, value);
+};
+
+
+/**
+ * repeated int32 prime_form = 25;
+ * @return {!Array<number>}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getPrimeFormList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 25));
+};
+
+
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setPrimeFormList = function(value) {
+  return jspb.Message.setField(this, 25, value || []);
+};
+
+
+/**
+ * @param {number} value
+ * @param {number=} opt_index
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.addPrimeForm = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 25, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.clearPrimeFormList = function() {
+  return this.setPrimeFormList([]);
+};
+
+
+/**
+ * repeated int32 interval_vector = 26;
+ * @return {!Array<number>}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getIntervalVectorList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 26));
+};
+
+
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setIntervalVectorList = function(value) {
+  return jspb.Message.setField(this, 26, value || []);
+};
+
+
+/**
+ * @param {number} value
+ * @param {number=} opt_index
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.addIntervalVector = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 26, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.clearIntervalVectorList = function() {
+  return this.setIntervalVectorList([]);
+};
+
+
+/**
+ * optional string figure_and_key = 27;
+ * @return {string}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getFigureAndKey = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 27, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setFigureAndKey = function(value) {
+  return jspb.Message.setProto3StringField(this, 27, value);
+};
+
+
+/**
+ * optional int32 functionality_score = 28;
+ * @return {number}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getFunctionalityScore = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 28, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setFunctionalityScore = function(value) {
+  return jspb.Message.setProto3IntField(this, 28, value);
+};
+
+
+/**
+ * optional bool is_neapolitan = 29;
+ * @return {boolean}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getIsNeapolitan = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 29, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setIsNeapolitan = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 29, value);
+};
+
+
+/**
+ * optional bool is_half_diminished_seventh = 30;
+ * @return {boolean}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getIsHalfDiminishedSeventh = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 30, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setIsHalfDiminishedSeventh = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 30, value);
+};
+
+
+/**
+ * optional bool is_augmented_triad = 31;
+ * @return {boolean}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getIsAugmentedTriad = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 31, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setIsAugmentedTriad = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 31, value);
+};
+
+
+/**
+ * optional bool is_diminished_triad = 32;
+ * @return {boolean}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getIsDiminishedTriad = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 32, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setIsDiminishedTriad = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 32, value);
+};
+
+
+/**
+ * optional bool is_consonant = 33;
+ * @return {boolean}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getIsConsonant = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 33, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setIsConsonant = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 33, value);
+};
+
+
+/**
+ * optional bool is_triad = 34;
+ * @return {boolean}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getIsTriad = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 34, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setIsTriad = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 34, value);
+};
+
+
+/**
+ * optional bool is_seventh = 35;
+ * @return {boolean}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getIsSeventh = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 35, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setIsSeventh = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 35, value);
+};
+
+
+/**
+ * optional string implied_quality = 36;
+ * @return {string}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getImpliedQuality = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 36, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setImpliedQuality = function(value) {
+  return jspb.Message.setProto3StringField(this, 36, value);
+};
+
+
+/**
+ * repeated int32 semitones_from_root = 37;
+ * @return {!Array<number>}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getSemitonesFromRootList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 37));
+};
+
+
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setSemitonesFromRootList = function(value) {
+  return jspb.Message.setField(this, 37, value || []);
+};
+
+
+/**
+ * @param {number} value
+ * @param {number=} opt_index
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.addSemitonesFromRoot = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 37, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.clearSemitonesFromRootList = function() {
+  return this.setSemitonesFromRootList([]);
+};
+
+
+/**
+ * optional string third_pitch = 38;
+ * @return {string}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getThirdPitch = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 38, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setThirdPitch = function(value) {
+  return jspb.Message.setProto3StringField(this, 38, value);
+};
+
+
+/**
+ * optional string fifth_pitch = 39;
+ * @return {string}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getFifthPitch = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 39, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setFifthPitch = function(value) {
+  return jspb.Message.setProto3StringField(this, 39, value);
+};
+
+
+/**
+ * optional string seventh_pitch = 40;
+ * @return {string}
+ */
+proto.musictheory.RomanNumeralResponse.prototype.getSeventhPitch = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 40, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.musictheory.RomanNumeralResponse} returns this
+ */
+proto.musictheory.RomanNumeralResponse.prototype.setSeventhPitch = function(value) {
+  return jspb.Message.setProto3StringField(this, 40, value);
 };
 
 

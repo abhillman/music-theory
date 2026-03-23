@@ -97,6 +97,68 @@ export class RomanNumeralResponse extends jspb.Message {
   getLilypondKey(): string;
   setLilypondKey(value: string): RomanNumeralResponse;
 
+  getIntervalsFromBassList(): Array<string>;
+  setIntervalsFromBassList(value: Array<string>): RomanNumeralResponse;
+  clearIntervalsFromBassList(): RomanNumeralResponse;
+  addIntervalsFromBass(value: string, index?: number): RomanNumeralResponse;
+
+  getPitchedCommonName(): string;
+  setPitchedCommonName(value: string): RomanNumeralResponse;
+
+  getPrimeFormList(): Array<number>;
+  setPrimeFormList(value: Array<number>): RomanNumeralResponse;
+  clearPrimeFormList(): RomanNumeralResponse;
+  addPrimeForm(value: number, index?: number): RomanNumeralResponse;
+
+  getIntervalVectorList(): Array<number>;
+  setIntervalVectorList(value: Array<number>): RomanNumeralResponse;
+  clearIntervalVectorList(): RomanNumeralResponse;
+  addIntervalVector(value: number, index?: number): RomanNumeralResponse;
+
+  getFigureAndKey(): string;
+  setFigureAndKey(value: string): RomanNumeralResponse;
+
+  getFunctionalityScore(): number;
+  setFunctionalityScore(value: number): RomanNumeralResponse;
+
+  getIsNeapolitan(): boolean;
+  setIsNeapolitan(value: boolean): RomanNumeralResponse;
+
+  getIsHalfDiminishedSeventh(): boolean;
+  setIsHalfDiminishedSeventh(value: boolean): RomanNumeralResponse;
+
+  getIsAugmentedTriad(): boolean;
+  setIsAugmentedTriad(value: boolean): RomanNumeralResponse;
+
+  getIsDiminishedTriad(): boolean;
+  setIsDiminishedTriad(value: boolean): RomanNumeralResponse;
+
+  getIsConsonant(): boolean;
+  setIsConsonant(value: boolean): RomanNumeralResponse;
+
+  getIsTriad(): boolean;
+  setIsTriad(value: boolean): RomanNumeralResponse;
+
+  getIsSeventh(): boolean;
+  setIsSeventh(value: boolean): RomanNumeralResponse;
+
+  getImpliedQuality(): string;
+  setImpliedQuality(value: string): RomanNumeralResponse;
+
+  getSemitonesFromRootList(): Array<number>;
+  setSemitonesFromRootList(value: Array<number>): RomanNumeralResponse;
+  clearSemitonesFromRootList(): RomanNumeralResponse;
+  addSemitonesFromRoot(value: number, index?: number): RomanNumeralResponse;
+
+  getThirdPitch(): string;
+  setThirdPitch(value: string): RomanNumeralResponse;
+
+  getFifthPitch(): string;
+  setFifthPitch(value: string): RomanNumeralResponse;
+
+  getSeventhPitch(): string;
+  setSeventhPitch(value: string): RomanNumeralResponse;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RomanNumeralResponse.AsObject;
   static toObject(includeInstance: boolean, msg: RomanNumeralResponse): RomanNumeralResponse.AsObject;
@@ -129,6 +191,24 @@ export namespace RomanNumeralResponse {
     forteClass: string;
     lilypondChord: string;
     lilypondKey: string;
+    intervalsFromBassList: Array<string>;
+    pitchedCommonName: string;
+    primeFormList: Array<number>;
+    intervalVectorList: Array<number>;
+    figureAndKey: string;
+    functionalityScore: number;
+    isNeapolitan: boolean;
+    isHalfDiminishedSeventh: boolean;
+    isAugmentedTriad: boolean;
+    isDiminishedTriad: boolean;
+    isConsonant: boolean;
+    isTriad: boolean;
+    isSeventh: boolean;
+    impliedQuality: string;
+    semitonesFromRootList: Array<number>;
+    thirdPitch: string;
+    fifthPitch: string;
+    seventhPitch: string;
   };
 }
 

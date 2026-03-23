@@ -174,6 +174,120 @@ class MusicTheoryServicer(musictheory_pb2_grpc.MusicTheoryServiceServicer):
 
         resp.lilypond_key = key_to_lilypond(k)
 
+        # Intervals from bass
+        try:
+            intervals = rn.annotateIntervals(stripSpecifiers=False, returnList=True)
+            if intervals:
+                resp.intervals_from_bass.extend(str(i) for i in intervals)
+        except Exception:
+            pass
+
+        # Pitched common name (e.g. "G-major triad")
+        try:
+            resp.pitched_common_name = rn.pitchedCommonName or ""
+        except Exception:
+            resp.pitched_common_name = ""
+
+        # Prime form (set theory)
+        try:
+            pf = rn.primeForm
+            if pf:
+                resp.prime_form.extend(int(x) for x in pf)
+        except Exception:
+            pass
+
+        # Interval vector (6-element)
+        try:
+            iv = rn.intervalVector
+            if iv:
+                resp.interval_vector.extend(int(x) for x in iv)
+        except Exception:
+            pass
+
+        # Figure and key string
+        try:
+            resp.figure_and_key = rn.figureAndKey or ""
+        except Exception:
+            resp.figure_and_key = ""
+
+        # Functionality score
+        try:
+            resp.functionality_score = rn.functionalityScore or 0
+        except Exception:
+            resp.functionality_score = 0
+
+        # Additional chord-type flags
+        try:
+            resp.is_neapolitan = rn.isNeapolitan()
+        except Exception:
+            resp.is_neapolitan = False
+
+        try:
+            resp.is_half_diminished_seventh = rn.isHalfDiminishedSeventh()
+        except Exception:
+            resp.is_half_diminished_seventh = False
+
+        try:
+            resp.is_augmented_triad = rn.isAugmentedTriad()
+        except Exception:
+            resp.is_augmented_triad = False
+
+        try:
+            resp.is_diminished_triad = rn.isDiminishedTriad()
+        except Exception:
+            resp.is_diminished_triad = False
+
+        try:
+            resp.is_consonant = rn.isConsonant()
+        except Exception:
+            resp.is_consonant = False
+
+        try:
+            resp.is_triad = rn.isTriad()
+        except Exception:
+            resp.is_triad = False
+
+        try:
+            resp.is_seventh = rn.isSeventh()
+        except Exception:
+            resp.is_seventh = False
+
+        # Implied quality from figure
+        try:
+            resp.implied_quality = rn.impliedQuality or ""
+        except Exception:
+            resp.implied_quality = ""
+
+        # Semitones from root for each chord step
+        try:
+            semitones = []
+            for step in [1, 3, 5, 7, 9, 11, 13]:
+                s = rn.semitonesFromChordStep(step)
+                if s is not None:
+                    semitones.append(int(s))
+            resp.semitones_from_root.extend(semitones)
+        except Exception:
+            pass
+
+        # Named chord tones (third, fifth, seventh)
+        try:
+            third = rn.third
+            resp.third_pitch = third.name if third else ""
+        except Exception:
+            resp.third_pitch = ""
+
+        try:
+            fifth = rn.fifth
+            resp.fifth_pitch = fifth.name if fifth else ""
+        except Exception:
+            resp.fifth_pitch = ""
+
+        try:
+            seventh = rn.seventh
+            resp.seventh_pitch = seventh.name if seventh else ""
+        except Exception:
+            resp.seventh_pitch = ""
+
         return resp
 
 

@@ -4,6 +4,142 @@ import { RomanNumeralRequest } from "../gen/musictheory_pb";
 import { RenderRomanNumeralRequest } from "../gen/chordimage_pb";
 import "./RomanNumeralAnalyzer.css";
 
+/* ── Field metadata: summary tooltips, sidebar descriptions, doc URLs ── */
+const CHORD_DOC =
+  "https://music21.org/music21docs/moduleReference/moduleChord.html#music21.chord.Chord";
+const ROMAN_DOC =
+  "https://music21.org/music21docs/moduleReference/moduleRoman.html#music21.roman.RomanNumeral";
+const LILY_DOC = "https://lilypond.org/doc/v2.24/Documentation/notation/index";
+
+interface FieldInfo {
+  label: string;
+  summary: string;
+  description: string;
+  url: string;
+}
+
+const FIELD_INFO: Record<string, FieldInfo> = {
+  pitches: {
+    label: "Pitches",
+    summary: "The note names that make up this chord.",
+    description:
+      "Returns a tuple of all Pitch objects in this Chord, ordered from lowest to highest. Each pitch is identified by its letter name and optional accidental (e.g. G, B, D for a G major triad).",
+    url: `${CHORD_DOC}.pitches`,
+  },
+  root: {
+    label: "Root",
+    summary: "The fundamental note the chord is built upon.",
+    description:
+      "The root is the note from which the chord is constructed by stacking thirds. It may differ from the bass note when the chord is inverted. Music21 uses an algorithm that finds the pitch with the most thirds stacked above it.",
+    url: `${CHORD_DOC}.root`,
+  },
+  bass: {
+    label: "Bass",
+    summary: "The lowest-sounding note of the chord.",
+    description:
+      "The bass is simply the lowest pitch in the chord voicing. In root position, the bass and root are the same note. In inversions, the bass is a different chord tone (the third, fifth, or seventh).",
+    url: `${CHORD_DOC}.bass`,
+  },
+  quality: {
+    label: "Quality",
+    summary: "Major, minor, diminished, or augmented character.",
+    description:
+      "The quality describes the intervallic makeup of the underlying triad: major (M3 + m3), minor (m3 + M3), diminished (m3 + m3), augmented (M3 + M3), or 'other' for non-tertian sonorities. The 'implied quality' comes from the Roman numeral figure itself.",
+    url: `${CHORD_DOC}.quality`,
+  },
+  intervals: {
+    label: "Intervals",
+    summary: "Distances from the bass note to each upper voice.",
+    description:
+      "Shows the interval between the bass and every other pitch in the chord, using standard abbreviations like M3 (major third), P5 (perfect fifth), m7 (minor seventh), etc. This is closely related to figured-bass notation.",
+    url: `${CHORD_DOC}.annotateIntervals`,
+  },
+  inversion: {
+    label: "Inversion",
+    summary: "Which chord tone is in the bass voice.",
+    description:
+      "Root position means the root is the lowest note. First inversion puts the third in the bass, second inversion puts the fifth in the bass, and third inversion (for seventh chords) puts the seventh in the bass. The figured-bass numbers indicate intervals above the bass.",
+    url: `${CHORD_DOC}.inversionText`,
+  },
+  chordTones: {
+    label: "Chord Tones",
+    summary: "Individual members of the chord by function.",
+    description:
+      "Identifies each pitch by its role within the chord: root (1st), third (3rd), fifth (5th), and seventh (7th) if present. These are diatonic steps above the root, not scale degrees.",
+    url: `${CHORD_DOC}.third`,
+  },
+  semitones: {
+    label: "Semitones",
+    summary: "Half-step distances from the root for each chord step.",
+    description:
+      "Shows the number of semitones (mod 12) above the root for each present chord step. For example, a major triad returns [0, 4, 7] — 0 for the root, 4 half-steps to the major third, and 7 to the perfect fifth.",
+    url: `${CHORD_DOC}.semitonesFromChordStep`,
+  },
+  scaleDegree: {
+    label: "Scale Degree",
+    summary: "Position of the chord's root within the key.",
+    description:
+      "An integer (1–7) showing where the chord root sits in the scale. Each degree has a traditional name: 1 = Tonic, 2 = Supertonic, 3 = Mediant, 4 = Subdominant, 5 = Dominant, 6 = Submediant, 7 = Leading Tone.",
+    url: `${ROMAN_DOC}.scaleDegree`,
+  },
+  functionality: {
+    label: "Functionality",
+    summary: "How harmonically 'important' this chord is (1–100).",
+    description:
+      "A heuristic score from music21 representing relative functional importance. V7 scores ~80 (strong dominant pull), while vi6 scores ~10 (coloristic). For secondary dominants like V/vi, scores are multiplied — e.g., V (70) × vi (40) / 100 = 28.",
+    url: `${ROMAN_DOC}.functionalityScore`,
+  },
+  pitchClasses: {
+    label: "Pitch Classes",
+    summary: "Numeric representation of each pitch (0 = C, 1 = C♯, … 11 = B).",
+    description:
+      "Pitch classes reduce all octave equivalents to a single integer 0–11 (C = 0, C♯/D♭ = 1, D = 2, etc.). This representation is central to post-tonal set theory and allows comparison of chords regardless of voicing or octave.",
+    url: `${CHORD_DOC}.pitchClasses`,
+  },
+  primeForm: {
+    label: "Prime Form",
+    summary: "Most compact set-theory representation of the chord.",
+    description:
+      "The prime form transposes and (if necessary) inverts the pitch-class set so it starts on 0 and is as compact as possible. Major and minor triads both reduce to [0, 3, 7]. This allows comparison of chord 'shapes' regardless of transposition or inversion.",
+    url: `${CHORD_DOC}.primeForm`,
+  },
+  forteClass: {
+    label: "Forte Class",
+    summary: "Allen Forte's catalog number for this set class.",
+    description:
+      "A label from Allen Forte's catalog of pitch-class sets, in the form 'X-Y' where X is the number of pitch classes (cardinality) and Y is the catalog number. The suffix A/B distinguishes inversionally related sets (e.g. 3-11A = minor triad, 3-11B = major triad).",
+    url: `${CHORD_DOC}.forteClass`,
+  },
+  intervalVector: {
+    label: "Interval Vector",
+    summary: "Tally of each interval class in the chord.",
+    description:
+      "A six-element vector counting how many of each interval class (ic1 through ic6) the chord contains. For example, a major triad <001110> has one minor third (ic3), one major third (ic4), and one perfect fifth (ic5). Z-related sets share the same vector.",
+    url: `${CHORD_DOC}.intervalVector`,
+  },
+  lilypond: {
+    label: "LilyPond",
+    summary: "The chord in LilyPond music engraving syntax.",
+    description:
+      "LilyPond is an open-source music engraving program. This field shows the chord as a LilyPond code snippet that can be pasted directly into a .ly file to produce beautiful notation. Pitches use Dutch naming (e.g., 'cis' for C♯, 'bes' for B♭).",
+    url: LILY_DOC,
+  },
+  lilypondKey: {
+    label: "LilyPond Key",
+    summary: "The key signature in LilyPond syntax.",
+    description:
+      "The \\key command in LilyPond format, e.g. '\\key c \\major'. This can be placed at the beginning of a LilyPond score to set the key signature for the notation.",
+    url: LILY_DOC,
+  },
+  flags: {
+    label: "Flags",
+    summary: "Boolean chord-type classifications.",
+    description:
+      "A set of true/false tests that identify specific chord types: major triad, minor triad, dominant seventh, diminished seventh, half-diminished seventh, augmented sixth, augmented triad, diminished triad, Neapolitan, and consonance. Each flag is determined by the chord's intervallic structure and spelling.",
+    url: `${CHORD_DOC}.isMajorTriad`,
+  },
+};
+
 /** Double the width and height attributes in an SVG string. */
 function scaleSvg(svg: string, factor: number = 2): string {
   return svg.replace(
@@ -41,6 +177,25 @@ interface AnalysisResult {
   forteClass: string;
   lilypondChord: string;
   lilypondKey: string;
+  // New fields
+  intervalsFromBass: string[];
+  pitchedCommonName: string;
+  primeForm: number[];
+  intervalVector: number[];
+  figureAndKey: string;
+  functionalityScore: number;
+  isNeapolitan: boolean;
+  isHalfDiminishedSeventh: boolean;
+  isAugmentedTriad: boolean;
+  isDiminishedTriad: boolean;
+  isConsonant: boolean;
+  isTriad: boolean;
+  isSeventh: boolean;
+  impliedQuality: string;
+  semitonesFromRoot: number[];
+  thirdPitch: string;
+  fifthPitch: string;
+  seventhPitch: string;
 }
 
 const KEYS = [
@@ -72,6 +227,37 @@ const KEYS = [
   "eb",
 ];
 
+/* ── Interactive label component ──────────────────────────────────── */
+function FieldLabel({
+  field,
+  activeField,
+  onSelect,
+}: {
+  field: string;
+  activeField: string | null;
+  onSelect: (field: string) => void;
+}) {
+  const info = FIELD_INFO[field];
+  if (!info) return <th>{field}</th>;
+  return (
+    <th
+      className={`field-label${activeField === field ? " field-label--active" : ""}`}
+      onClick={() => onSelect(field)}
+      title={info.summary}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect(field);
+        }
+      }}
+    >
+      {info.label}
+    </th>
+  );
+}
+
 export default function RomanNumeralAnalyzer() {
   const [romanNumeral, setRomanNumeral] = useState("V");
   const [key, setKey] = useState("C");
@@ -81,8 +267,29 @@ export default function RomanNumeralAnalyzer() {
   const [error, setError] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showAcknowledgements, setShowAcknowledgements] = useState(false);
+  const [sidebarField, setSidebarField] = useState<string | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  const openSidebar = useCallback((field: string) => {
+    setSidebarField((prev) => (prev === field ? null : field));
+  }, []);
+
+  const closeSidebar = useCallback(() => {
+    setSidebarField(null);
+  }, []);
+
+  // Close sidebar on Escape
+  useEffect(() => {
+    function handleEscapeSidebar(e: KeyboardEvent) {
+      if (e.key === "Escape" && sidebarField) {
+        closeSidebar();
+      }
+    }
+    document.addEventListener("keydown", handleEscapeSidebar);
+    return () => document.removeEventListener("keydown", handleEscapeSidebar);
+  }, [sidebarField, closeSidebar]);
 
   // Close tooltip when clicking outside or pressing Escape
   useEffect(() => {
@@ -355,6 +562,25 @@ export default function RomanNumeralAnalyzer() {
               forteClass: res.getForteClass(),
               lilypondChord: res.getLilypondChord(),
               lilypondKey: res.getLilypondKey(),
+              // New fields
+              intervalsFromBass: res.getIntervalsFromBassList(),
+              pitchedCommonName: res.getPitchedCommonName(),
+              primeForm: res.getPrimeFormList(),
+              intervalVector: res.getIntervalVectorList(),
+              figureAndKey: res.getFigureAndKey(),
+              functionalityScore: res.getFunctionalityScore(),
+              isNeapolitan: res.getIsNeapolitan(),
+              isHalfDiminishedSeventh: res.getIsHalfDiminishedSeventh(),
+              isAugmentedTriad: res.getIsAugmentedTriad(),
+              isDiminishedTriad: res.getIsDiminishedTriad(),
+              isConsonant: res.getIsConsonant(),
+              isTriad: res.getIsTriad(),
+              isSeventh: res.getIsSeventh(),
+              impliedQuality: res.getImpliedQuality(),
+              semitonesFromRoot: res.getSemitonesFromRootList(),
+              thirdPitch: res.getThirdPitch(),
+              fifthPitch: res.getFifthPitch(),
+              seventhPitch: res.getSeventhPitch(),
             });
           });
         },
@@ -403,8 +629,10 @@ export default function RomanNumeralAnalyzer() {
     if (e.key === "Enter") analyze();
   };
 
+  const sidebarInfo = sidebarField ? FIELD_INFO[sidebarField] : null;
+
   return (
-    <div className="analyzer">
+    <div className={`analyzer${sidebarField ? " analyzer--sidebar-open" : ""}`}>
       <style>{footerStyles}</style>
       <h1>Roman Numeral Analyzer</h1>
       <p className="subtitle">
@@ -551,72 +779,255 @@ export default function RomanNumeralAnalyzer() {
             <span className="roman">{analysis.inputRomanNumeral}</span>
             <span className="in-key">in {analysis.key}</span>
             <span className="chord-name">
-              {analysis.rootPitch} {analysis.commonName}
+              {analysis.pitchedCommonName ||
+                `${analysis.rootPitch} ${analysis.commonName}`}
             </span>
           </div>
 
           {/* ── Detail Table ─────────────────────────────────────── */}
           <table className="detail-table">
             <tbody>
-              <tr>
-                <th>Pitches</th>
+              <tr className={sidebarField === "pitches" ? "row--active" : ""}>
+                <FieldLabel
+                  field="pitches"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
                 <td>{analysis.pitchNames.join(" – ")}</td>
               </tr>
-              <tr>
-                <th>Root</th>
+              <tr className={sidebarField === "root" ? "row--active" : ""}>
+                <FieldLabel
+                  field="root"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
                 <td>{analysis.rootPitch}</td>
               </tr>
-              <tr>
-                <th>Bass</th>
+              <tr className={sidebarField === "bass" ? "row--active" : ""}>
+                <FieldLabel
+                  field="bass"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
                 <td>{analysis.bassPitch}</td>
               </tr>
-              <tr>
-                <th>Quality</th>
-                <td>{analysis.quality}</td>
+              <tr className={sidebarField === "quality" ? "row--active" : ""}>
+                <FieldLabel
+                  field="quality"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
+                <td>
+                  {analysis.quality}
+                  {analysis.impliedQuality &&
+                    analysis.impliedQuality !== analysis.quality &&
+                    ` (implied: ${analysis.impliedQuality})`}
+                </td>
               </tr>
-              <tr>
-                <th>Inversion</th>
+              {analysis.intervalsFromBass.length > 0 && (
+                <tr
+                  className={sidebarField === "intervals" ? "row--active" : ""}
+                >
+                  <FieldLabel
+                    field="intervals"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>{analysis.intervalsFromBass.join(", ")}</td>
+                </tr>
+              )}
+              <tr className={sidebarField === "inversion" ? "row--active" : ""}>
+                <FieldLabel
+                  field="inversion"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
                 <td>
                   {analysis.inversionText}
                   {analysis.figuredBassString &&
                     ` (${analysis.figuredBassString})`}
                 </td>
               </tr>
-              <tr>
-                <th>Scale Degree</th>
+              {/* ── Chord Tones ──────────────────────────────────── */}
+              {(analysis.thirdPitch ||
+                analysis.fifthPitch ||
+                analysis.seventhPitch) && (
+                <tr
+                  className={sidebarField === "chordTones" ? "row--active" : ""}
+                >
+                  <FieldLabel
+                    field="chordTones"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>
+                    {[
+                      analysis.rootPitch && `Root: ${analysis.rootPitch}`,
+                      analysis.thirdPitch && `3rd: ${analysis.thirdPitch}`,
+                      analysis.fifthPitch && `5th: ${analysis.fifthPitch}`,
+                      analysis.seventhPitch && `7th: ${analysis.seventhPitch}`,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </td>
+                </tr>
+              )}
+              {analysis.semitonesFromRoot.length > 0 && (
+                <tr
+                  className={sidebarField === "semitones" ? "row--active" : ""}
+                >
+                  <FieldLabel
+                    field="semitones"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>[{analysis.semitonesFromRoot.join(", ")}]</td>
+                </tr>
+              )}
+              <tr
+                className={sidebarField === "scaleDegree" ? "row--active" : ""}
+              >
+                <FieldLabel
+                  field="scaleDegree"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
                 <td>
                   {analysis.scaleDegree} — {analysis.scaleDegreeName}
                 </td>
               </tr>
-              <tr>
-                <th>Pitch Classes</th>
+              {analysis.functionalityScore > 0 && (
+                <tr
+                  className={
+                    sidebarField === "functionality" ? "row--active" : ""
+                  }
+                >
+                  <FieldLabel
+                    field="functionality"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>
+                    <span className="functionality-bar-track">
+                      <span
+                        className="functionality-bar-fill"
+                        style={{ width: `${analysis.functionalityScore}%` }}
+                      />
+                    </span>
+                    <span className="functionality-score">
+                      {analysis.functionalityScore}
+                    </span>
+                  </td>
+                </tr>
+              )}
+              <tr
+                className={sidebarField === "pitchClasses" ? "row--active" : ""}
+              >
+                <FieldLabel
+                  field="pitchClasses"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
                 <td>[{analysis.pitchClasses.join(", ")}]</td>
               </tr>
-              <tr>
-                <th>Forte Class</th>
+              {analysis.primeForm.length > 0 && (
+                <tr
+                  className={sidebarField === "primeForm" ? "row--active" : ""}
+                >
+                  <FieldLabel
+                    field="primeForm"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>[{analysis.primeForm.join(", ")}]</td>
+                </tr>
+              )}
+              <tr
+                className={sidebarField === "forteClass" ? "row--active" : ""}
+              >
+                <FieldLabel
+                  field="forteClass"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
                 <td>{analysis.forteClass || "—"}</td>
               </tr>
-              <tr>
-                <th>LilyPond</th>
+              {analysis.intervalVector.length > 0 && (
+                <tr
+                  className={
+                    sidebarField === "intervalVector" ? "row--active" : ""
+                  }
+                >
+                  <FieldLabel
+                    field="intervalVector"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>&lt;{analysis.intervalVector.join("")}&gt;</td>
+                </tr>
+              )}
+              <tr className={sidebarField === "lilypond" ? "row--active" : ""}>
+                <FieldLabel
+                  field="lilypond"
+                  activeField={sidebarField}
+                  onSelect={openSidebar}
+                />
                 <td>
                   <code>{analysis.lilypondChord}</code>
                 </td>
               </tr>
+              {analysis.lilypondKey && (
+                <tr
+                  className={
+                    sidebarField === "lilypondKey" ? "row--active" : ""
+                  }
+                >
+                  <FieldLabel
+                    field="lilypondKey"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
+                  <td>
+                    <code>{analysis.lilypondKey}</code>
+                  </td>
+                </tr>
+              )}
 
               {/* Boolean flags — only show truthy ones */}
               {(analysis.isMajorTriad ||
                 analysis.isMinorTriad ||
                 analysis.isDominantSeventh ||
                 analysis.isDiminishedSeventh ||
-                analysis.isAugmentedSixth) && (
-                <tr>
-                  <th>Flags</th>
+                analysis.isHalfDiminishedSeventh ||
+                analysis.isAugmentedSixth ||
+                analysis.isAugmentedTriad ||
+                analysis.isDiminishedTriad ||
+                analysis.isNeapolitan ||
+                analysis.isTriad ||
+                analysis.isSeventh ||
+                analysis.isConsonant) && (
+                <tr className={sidebarField === "flags" ? "row--active" : ""}>
+                  <FieldLabel
+                    field="flags"
+                    activeField={sidebarField}
+                    onSelect={openSidebar}
+                  />
                   <td className="flags">
+                    {analysis.isTriad && <span className="flag">Triad</span>}
+                    {analysis.isSeventh && (
+                      <span className="flag">Seventh</span>
+                    )}
                     {analysis.isMajorTriad && (
                       <span className="flag">Major Triad</span>
                     )}
                     {analysis.isMinorTriad && (
                       <span className="flag">Minor Triad</span>
+                    )}
+                    {analysis.isAugmentedTriad && (
+                      <span className="flag">Augmented Triad</span>
+                    )}
+                    {analysis.isDiminishedTriad && (
+                      <span className="flag">Diminished Triad</span>
                     )}
                     {analysis.isDominantSeventh && (
                       <span className="flag">Dominant 7th</span>
@@ -624,8 +1035,17 @@ export default function RomanNumeralAnalyzer() {
                     {analysis.isDiminishedSeventh && (
                       <span className="flag">Diminished 7th</span>
                     )}
+                    {analysis.isHalfDiminishedSeventh && (
+                      <span className="flag">Half-Dim 7th</span>
+                    )}
                     {analysis.isAugmentedSixth && (
                       <span className="flag">Augmented 6th</span>
+                    )}
+                    {analysis.isNeapolitan && (
+                      <span className="flag flag-special">Neapolitan</span>
+                    )}
+                    {analysis.isConsonant && (
+                      <span className="flag flag-consonant">Consonant</span>
                     )}
                   </td>
                 </tr>
@@ -634,6 +1054,68 @@ export default function RomanNumeralAnalyzer() {
           </table>
         </div>
       )}
+
+      {/* ── Sidebar ─────────────────────────────────────────────── */}
+      <div
+        className={`sidebar-overlay${sidebarField ? " sidebar-overlay--visible" : ""}`}
+        onClick={closeSidebar}
+      />
+      <aside
+        ref={sidebarRef}
+        className={`sidebar${sidebarField ? " sidebar--open" : ""}`}
+      >
+        {sidebarInfo && (
+          <>
+            <div className="sidebar-header">
+              <h3 className="sidebar-title">{sidebarInfo.label}</h3>
+              <button
+                className="sidebar-close"
+                onClick={closeSidebar}
+                type="button"
+                aria-label="Close sidebar"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="sidebar-body">
+              <p className="sidebar-summary">{sidebarInfo.summary}</p>
+              <p className="sidebar-description">{sidebarInfo.description}</p>
+
+              <a
+                className="sidebar-doc-link"
+                href={sidebarInfo.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Read full documentation ↗
+              </a>
+
+              <div className="sidebar-iframe-wrap">
+                <div className="sidebar-iframe-label">
+                  <span>music21 Reference</span>
+                  <a
+                    href={sidebarInfo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="sidebar-iframe-ext"
+                  >
+                    ↗
+                  </a>
+                </div>
+                <iframe
+                  key={sidebarInfo.url}
+                  src={sidebarInfo.url}
+                  title={`Documentation: ${sidebarInfo.label}`}
+                  className="sidebar-iframe"
+                  sandbox="allow-scripts allow-same-origin allow-popups"
+                />
+              </div>
+            </div>
+          </>
+        )}
+      </aside>
+
       {/* ── Footer ──────────────────────────────────────────────── */}
       <footer className="app-footer">
         <button
