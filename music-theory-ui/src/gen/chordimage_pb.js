@@ -11,7 +11,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-var jspb = require('google-protobuf');
+import * as jspb from 'google-protobuf';
 var goog = jspb;
 var global = globalThis;
 
@@ -561,4 +561,7 @@ proto.chordimage.RenderRomanNumeralSvgResponse.prototype.setError = function(val
 };
 
 
-goog.object.extend(exports, proto.chordimage);
+
+export const RenderRomanNumeralRequest = proto.chordimage.RenderRomanNumeralRequest;
+export const RenderRomanNumeralResponse = proto.chordimage.RenderRomanNumeralResponse;
+export const RenderRomanNumeralSvgResponse = proto.chordimage.RenderRomanNumeralSvgResponse;

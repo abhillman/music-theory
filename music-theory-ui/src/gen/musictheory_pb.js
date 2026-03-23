@@ -11,7 +11,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-var jspb = require('google-protobuf');
+import * as jspb from 'google-protobuf';
 var goog = jspb;
 var global = globalThis;
 
@@ -1041,4 +1041,6 @@ proto.musictheory.RomanNumeralResponse.prototype.setLilypondKey = function(value
 };
 
 
-goog.object.extend(exports, proto.musictheory);
+
+export const RomanNumeralRequest = proto.musictheory.RomanNumeralRequest;
+export const RomanNumeralResponse = proto.musictheory.RomanNumeralResponse;

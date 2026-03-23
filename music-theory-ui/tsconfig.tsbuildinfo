@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/client.ts","./src/index.tsx","./src/vite-env.d.ts","./src/components/romannumeralanalyzer.tsx","./src/gen/chordimageserviceclientpb.ts","./src/gen/musictheoryserviceclientpb.ts","./src/gen/chordimage_pb.d.ts","./src/gen/chordimage_pb.js","./src/gen/musictheory_pb.d.ts","./src/gen/musictheory_pb.js"],"version":"5.8.3"}
