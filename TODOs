@@ -27,3 +27,8 @@ technical
     * ie to the render service (important)
 * update service definition for the render service
     * change it to a higher-level API that does not necessitate using lilypond syntax
+* deplpyment strategy
+    * could do as-is
+    * could pre-compute common permutations and just host it all on a CDN
+        * could implement caching--may be a middle ground.. have computation for new things a bit slow, but
+          fast for things that have been queries before
