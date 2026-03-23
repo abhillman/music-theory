@@ -11,6 +11,7 @@ from music21 import chord as m21chord
 from music21 import duration as m21duration
 from music21 import key as m21key
 from music21 import lily, roman
+from music21 import pitch as m21pitch
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,56 @@ def chord_to_lilypond(c: m21chord.Chord) -> str:
     except Exception as e:
         logger.warning("LilyPond conversion failed: %s", e)
         return ""
+
+
+# Target range for comfortable treble-clef rendering.
+# We want the lowest note of the chord to sit near middle-C (C4) so
+# the chord straddles the staff rather than floating above it.
+# B3–B4 is roughly the middle of the treble staff.
+TARGET_LOWEST_MIDI = m21pitch.Pitch("B3").midi  # 59
+TARGET_HIGHEST_MIDI = m21pitch.Pitch("B4").midi  # 71
+
+
+def normalize_chord_octave(pitches: list[m21pitch.Pitch]) -> list[m21pitch.Pitch]:
+    """Return a new list of pitches shifted so the chord sits comfortably
+    on the treble-clef staff.
+
+    Strategy:
+      1. Place all pitches in close position above the bass.
+      2. Shift the whole chord up or down in octaves so its lowest note
+         falls inside the target band (B3–B4).  This keeps the chord
+         nicely centred on the staff.
+    """
+    if not pitches:
+        return pitches
+
+    # Work on copies so we don't mutate the originals.
+    notes = [m21pitch.Pitch(p.nameWithOctave) for p in pitches]
+
+    # --- 1. Close-position the chord above the bass note ---------------
+    # Put every note in the same octave as the first note, then bump up
+    # any note that would sit below the previous one.
+    base = notes[0]
+    for i in range(1, len(notes)):
+        notes[i].octave = base.octave
+        while notes[i].midi < notes[i - 1].midi:
+            notes[i].octave += 1
+
+    # --- 2. Shift whole chord so the lowest note is in target band -----
+    lowest_midi = notes[0].midi
+    # How many semitones to shift (in whole octaves)
+    shift = 0
+    while lowest_midi + shift < TARGET_LOWEST_MIDI:
+        shift += 12
+    while lowest_midi + shift > TARGET_HIGHEST_MIDI:
+        shift -= 12
+
+    if shift:
+        octave_delta = shift // 12
+        for n in notes:
+            n.octave += octave_delta
+
+    return notes
 
 
 def key_to_lilypond(k: m21key.Key) -> str:
@@ -162,7 +213,8 @@ class MusicTheoryServicer(musictheory_pb2_grpc.MusicTheoryServiceServicer):
 
         # LilyPond chord representation
         try:
-            c = m21chord.Chord(rn.pitches)
+            normalized = normalize_chord_octave(list(rn.pitches))
+            c = m21chord.Chord(normalized)
             c.duration = m21duration.Duration(type="whole")
 
             resp.lilypond_chord = chord_to_lilypond(c)
