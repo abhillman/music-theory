@@ -97,7 +97,7 @@
 
 /* ── Button ─────────────────────────────────────────────────────── */
 
-button {
+button:not(.help-toggle):not(.ack-link):not(.ack-close) {
     padding: 0.6rem 1.5rem;
     font-size: 0.9rem;
     font-weight: 600;
@@ -115,16 +115,16 @@ button {
     line-height: 1.4;
 }
 
-button:hover:not(:disabled) {
+button:not(.help-toggle):not(.ack-link):not(.ack-close):hover:not(:disabled) {
     background: var(--accent-hover);
     box-shadow: var(--shadow-sm);
 }
 
-button:active:not(:disabled) {
+button:not(.help-toggle):not(.ack-link):not(.ack-close):active:not(:disabled) {
     transform: scale(0.98);
 }
 
-button:disabled {
+button:not(.help-toggle):not(.ack-link):not(.ack-close):disabled {
     opacity: 0.55;
     cursor: not-allowed;
 }
