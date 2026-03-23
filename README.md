@@ -2,7 +2,7 @@
 
 A web app for analyzing Roman numeral chords. Enter a Roman numeral and key, and get back detailed chord analysis (pitches, inversions, figured bass, quality, etc.) along with a rendered score.
 
-![Screenshot](screenshot.png)
+<img src="screenshot.png" style="width: 75%">
 
 ## Prerequisites
 
