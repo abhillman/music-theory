@@ -20,6 +20,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "generate": "bash generate.sh",
+    "prestart": "npm run generate",
+    "prebuild": "npm run generate",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
