@@ -1,22 +1,23 @@
 # chord-image-grpc
 
-A gRPC orchestrator service that takes a Roman numeral (and optional key), analyzes it via `music-theory-grpc`, renders the resulting chord as a PNG via `lilypond-grpc`, and returns the image.
+A gRPC orchestrator service that takes a Roman numeral (and optional key), analyzes it via `music-theory-grpc`, renders the resulting chord as a PNG or SVG via `lilypond-grpc`, and returns the image.
 
 ## How It Works
 
 ```
 Client
   │
-  │  RenderRomanNumeral("vii64", "c")
+  │  RenderRomanNumeral("vii64", "c")        → png_base64
+  │  RenderRomanNumeralSvg("vii64", "c")     → svg (raw XML)
   ▼
 chord-image-grpc
   │
   ├──► music-theory-grpc  AnalyzeRomanNumeral  →  lilypond_chord, key
   │
-  └──► lilypond-grpc      Render(chord, key)   →  png_base64
+  └──► lilypond-grpc      Render / RenderSvg   →  png_base64 / svg
   │
   ▼
-Client receives png_base64
+Client receives png_base64 or svg
 ```
 
 ## Proto Definition
@@ -24,6 +25,7 @@ Client receives png_base64
 ```protobuf
 service ChordImageService {
   rpc RenderRomanNumeral (RenderRomanNumeralRequest) returns (RenderRomanNumeralResponse);
+  rpc RenderRomanNumeralSvg (RenderRomanNumeralRequest) returns (RenderRomanNumeralSvgResponse);
 }
 
 message RenderRomanNumeralRequest {
@@ -33,6 +35,11 @@ message RenderRomanNumeralRequest {
 
 message RenderRomanNumeralResponse {
   string png_base64 = 1;
+  string error = 2;
+}
+
+message RenderRomanNumeralSvgResponse {
+  string svg = 1;   // raw SVG XML string
   string error = 2;
 }
 ```
@@ -120,6 +127,8 @@ The service is exposed through Envoy at `localhost:8080`.
 
 ## Testing with grpcurl
 
+### PNG rendering (original)
+
 ```bash
 # Basic — just a roman numeral (key defaults to C)
 grpcurl -plaintext \
@@ -132,7 +141,7 @@ grpcurl -plaintext \
   localhost:8080 chordimage.ChordImageService/RenderRomanNumeral
 ```
 
-A successful response looks like:
+A successful PNG response looks like:
 
 ```json
 {
@@ -140,7 +149,40 @@ A successful response looks like:
 }
 ```
 
-An error response looks like:
+### SVG rendering
+
+```bash
+# Basic — just a roman numeral (key defaults to C)
+grpcurl -plaintext \
+  -d '{"roman_numeral": "V"}' \
+  localhost:8080 chordimage.ChordImageService/RenderRomanNumeralSvg
+
+# With a key
+grpcurl -plaintext \
+  -d '{"roman_numeral": "vii64", "key": "c"}' \
+  localhost:8080 chordimage.ChordImageService/RenderRomanNumeralSvg
+```
+
+A successful SVG response looks like:
+
+```json
+{
+  "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" ..."
+}
+```
+
+You can pipe the SVG output to a file:
+
+```bash
+grpcurl -plaintext \
+  -d '{"roman_numeral": "V", "key": "c"}' \
+  localhost:8080 chordimage.ChordImageService/RenderRomanNumeralSvg \
+  | jq -r '.svg' > output.svg
+```
+
+### Error responses
+
+An error response (for either RPC) looks like:
 
 ```json
 {

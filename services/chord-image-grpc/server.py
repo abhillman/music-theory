@@ -65,6 +65,46 @@ class ChordImageServicer(chordimage_pb2_grpc.ChordImageServiceServicer):
 
         return chordimage_pb2.RenderRomanNumeralResponse(png_base64=render.png_base64)
 
+    def RenderRomanNumeralSvg(self, request, context):
+        # 1. Analyze the roman numeral
+        try:
+            analysis = self.theory_stub.AnalyzeRomanNumeral(
+                musictheory_pb2.RomanNumeralRequest(
+                    roman_numeral=request.roman_numeral,
+                    key=request.key,
+                )
+            )
+        except grpc.RpcError as e:
+            logger.error(f"AnalyzeRomanNumeral failed: {e.details()}")
+            return chordimage_pb2.RenderRomanNumeralSvgResponse(
+                error=f"Analysis failed: {e.details()}"
+            )
+
+        logger.info(
+            f"Analyzed '{request.roman_numeral}' in key '{analysis.key}': "
+            f"lilypond_chord='{analysis.lilypond_chord}'"
+        )
+
+        # 2. Render the chord as SVG via LilyPond
+        try:
+            render = self.lilypond_stub.RenderSvg(
+                lilypond_pb2.RenderRequest(
+                    clef=lilypond_pb2.TREBLE,
+                    key=analysis.lilypond_key,
+                    notes=analysis.lilypond_chord,
+                )
+            )
+        except grpc.RpcError as e:
+            logger.error(f"RenderSvg failed: {e.details()}")
+            return chordimage_pb2.RenderRomanNumeralSvgResponse(
+                error=f"RenderSvg failed: {e.details()}"
+            )
+
+        if render.error:
+            return chordimage_pb2.RenderRomanNumeralSvgResponse(error=render.error)
+
+        return chordimage_pb2.RenderRomanNumeralSvgResponse(svg=render.svg)
+
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
