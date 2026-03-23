@@ -21,7 +21,27 @@ A web app for analyzing Roman numeral chords. Enter a Roman numeral and key, and
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose
 - [Node.js](https://nodejs.org/) (for the front-end)
 
-## Getting Started
+## Quick Start
+
+The `start.sh` script launches the entire application (back-end services + front-end) in a single command:
+
+```sh
+# Production mode — builds the front-end and serves it via Vite preview
+./start.sh
+
+# Development mode — starts the Vite dev server with hot module replacement
+./start.sh --dev
+```
+
+Press **Ctrl+C** to gracefully shut everything down (front-end process + `docker compose down`).
+
+| Flag | Description |
+|------|-------------|
+| `--dev` | Start the front-end in development mode (Vite dev server with HMR on port 3000) |
+| `--prod` | Build and serve the front-end in production/preview mode (port 4173, default) |
+| `--skip-build` | Reuse existing Docker images and build artifacts for faster restarts |
+
+## Getting Started (manual)
 
 ### 1. Start the back-end services
 
