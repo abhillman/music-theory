@@ -159,7 +159,7 @@ export default function RomanNumeralAnalyzer() {
         });
       });
 
-      setChordSvg(scaleSvg(svgRes, 2));
+      setChordSvg(scaleSvg(svgRes, 1.6));
     } catch (e: any) {
       setError(e.message || "Unknown error");
     } finally {
