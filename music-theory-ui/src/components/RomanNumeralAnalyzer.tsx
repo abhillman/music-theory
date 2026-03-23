@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { musicTheoryClient, chordImageClient } from "../client";
 import { RomanNumeralRequest } from "../gen/musictheory_pb";
 import { RenderRomanNumeralRequest } from "../gen/chordimage_pb";
@@ -166,6 +166,11 @@ export default function RomanNumeralAnalyzer() {
       setLoading(false);
     }
   }, [romanNumeral, key]);
+
+  // Automatically analyze the default chord on mount
+  useEffect(() => {
+    analyze();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") analyze();
