@@ -4,6 +4,18 @@ A web app for analyzing Roman numeral chords. Enter a Roman numeral and key, and
 
 <img src="screenshot.png" style="width: 75%">
 
+## Technologies
+
+| Layer | Tool | Role |
+|-------|------|------|
+| **Music Engine** | [music21](https://web.mit.edu/music21/) | Computer-aided musicology & theory analysis |
+| | [LilyPond](https://lilypond.org/) | Sheet-music engraving |
+| **Infrastructure** | [Rust](https://www.rust-lang.org/) | LilyPond rendering service |
+| | [gRPC](https://grpc.io/) | Service-to-service communication |
+| | [Envoy](https://www.envoyproxy.io/) | gRPC-Web gateway / edge proxy |
+| **Frontend** | [React](https://react.dev/) | UI components & state management |
+| | [grpc-web](https://github.com/grpc/grpc-web) | Browser client for gRPC services |
+
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose
