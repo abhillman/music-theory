@@ -1,3 +1,5 @@
+ux
+
 * update the UX to be able to specify the clef
 * update the UX to either intelligently:
     * select the clef based on the key signature / where the notes are located
@@ -14,3 +16,13 @@
     * qualities of chords
     * inversions of chords
 * add additional information about chords from proto that comes from the music theory service
+* fix if someone writes something non-sensical
+    * eg `Vo` should be re-written as `vo`
+
+technical
+* add the ability to deploy
+* add some kind of safety mechanism for sanitizing input
+    * ie to the music theory service
+    * ie to the render service (important)
+* update service definition for the render service
+    * change it to a higher-level API that does not necessitate using lilypond syntax
