@@ -159,7 +159,10 @@ export default function RomanNumeralAnalyzer() {
 
   return (
     <div className="analyzer">
-      <h1>🎵 Roman Numeral Analyzer</h1>
+      <h1>Roman Numeral Analyzer</h1>
+      <p className="subtitle">
+        Analyze chords, inversions, and figured bass in any key.
+      </p>
 
       <div className="input-row">
         <div className="field">
