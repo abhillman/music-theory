@@ -1,6 +1,6 @@
 # lilypond-grpc
 
-A gRPC server that renders [LilyPond](https://lilypond.org/) music notation to PNG images. It manages a pool of LilyPond processes for concurrent rendering and returns cropped, high-resolution images as base64-encoded PNGs.
+A gRPC server that renders [LilyPond](https://lilypond.org/) music notation to PNG and SVG images. It manages a pool of LilyPond processes for concurrent rendering and returns cropped, high-resolution output as base64-encoded PNGs or raw SVG strings.
 
 ## Example
 
@@ -90,8 +90,14 @@ message RenderResponse {
   string error = 2;       // empty on success
 }
 
+message RenderSvgResponse {
+  string svg = 1;          // raw SVG XML string
+  string error = 2;        // empty on success
+}
+
 service LilyPondService {
   rpc Render (RenderRequest) returns (RenderResponse);
+  rpc RenderSvg (RenderRequest) returns (RenderSvgResponse);
 }
 ```
 
@@ -150,11 +156,22 @@ cargo run --bin test_client -- bass "c \\major" "<c e g>1" bass_chord.png
 
 ### grpcurl
 
+**PNG:**
+
 ```
 grpcurl \
 	-plaintext \
 	-d '{"clef":"TREBLE","key":"c \\\\major","notes":"<cis e g>1"}' \
 	'localhost:50051' lilypond.LilyPondService.Render
+```
+
+**SVG:**
+
+```
+grpcurl \
+	-plaintext \
+	-d '{"clef":"TREBLE","key":"c \\\\major","notes":"<cis e g>1"}' \
+	'localhost:50051' lilypond.LilyPondService.RenderSvg
 ```
 
 ### Postman
@@ -178,9 +195,9 @@ grpcurl \
 ┌───────────┐       gRPC       ┌───────────────┐      subprocess     ┌──────────┐
 │  Client   │ ───────────────▶ │  Tonic Server │ ──────────────────▶ │ LilyPond │
 │           │ ◀─────────────── │               │ ◀────────────────── │          │
-│           │   base64 PNG     │  Process Pool │    cropped PNG      │          │
-└───────────┘                  └───────────────┘   (temp directory)  └──────────┘
-                                     │
+│           │  base64 PNG or   │  Process Pool │   cropped PNG/SVG   │          │
+│           │    raw SVG       └───────────────┘   (temp directory)  └──────────┘
+└───────────┘                        │
                                      │ Semaphore
                                      │ (max N concurrent)
                                      ▼

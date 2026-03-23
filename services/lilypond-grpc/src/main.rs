@@ -13,7 +13,7 @@ pub mod proto {
 }
 
 use proto::lily_pond_service_server::{LilyPondService, LilyPondServiceServer};
-use proto::{Clef, RenderRequest, RenderResponse};
+use proto::{Clef, RenderRequest, RenderResponse, RenderSvgResponse};
 
 pub struct LilyPondServer {
     pool: Arc<pool::LilyPondPool>,
@@ -53,6 +53,42 @@ impl LilyPondService for LilyPondServer {
                 error!(error = %e, "Render failed");
                 Ok(Response::new(RenderResponse {
                     png_base64: String::new(),
+                    error: e,
+                }))
+            }
+        }
+    }
+
+    async fn render_svg(
+        &self,
+        request: Request<RenderRequest>,
+    ) -> Result<Response<RenderSvgResponse>, Status> {
+        let req = request.into_inner();
+
+        info!(
+            clef = ?Clef::try_from(req.clef).unwrap_or(Clef::Treble),
+            key = %req.key,
+            notes = %req.notes,
+            "Received render_svg request"
+        );
+
+        let source = template::render_template(&req);
+
+        match self.pool.render_svg(&source).await {
+            Ok(result) => {
+                let svg_string = String::from_utf8(result.svg_bytes).map_err(|e| {
+                    Status::internal(format!("SVG output was not valid UTF-8: {e}"))
+                })?;
+                info!(svg_size = svg_string.len(), "SVG render successful");
+                Ok(Response::new(RenderSvgResponse {
+                    svg: svg_string,
+                    error: String::new(),
+                }))
+            }
+            Err(e) => {
+                error!(error = %e, "SVG render failed");
+                Ok(Response::new(RenderSvgResponse {
+                    svg: String::new(),
                     error: e,
                 }))
             }

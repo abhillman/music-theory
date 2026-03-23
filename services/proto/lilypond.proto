@@ -25,6 +25,12 @@ message RenderResponse {
   string error = 2;
 }
 
+message RenderSvgResponse {
+  string svg = 1;
+  string error = 2;
+}
+
 service LilyPondService {
   rpc Render(RenderRequest) returns (RenderResponse);
+  rpc RenderSvg(RenderRequest) returns (RenderSvgResponse);
 }
