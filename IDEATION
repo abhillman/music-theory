@@ -1,0 +1,75 @@
+Some ideas from Gemini
+
+===
+
+## 1. Introducing "The Harmony Workbench" (The Core UX)
+
+Instead of a static input bar and a separate results card, we’re moving to an integrated **Harmony Workbench.**
+
+### The Global Context Bar
+
+The analysis is no longer just "V in C Major." Context is everything. We introduce a smart sticky header that tracks and analyzes your progress.
+
+**A. Key Track & History**
+Imagine a breadcrumb trail at the top, showing the sequence of keys you have been analyzing. This handles pivot-chord modulations effortlessly.
+* **[ C Major ]** → **[ G Major ]** (User explores a modulation)
+
+### B. "Advanced Analysis Modes" Toggle
+
+A toggle switch adds a layer of depth.
+* **[ Simple (Triads/7ths) ]** | **[ Advanced (Schenkerian, Functional, Figured Bass) ]**
+
+---
+
+## 2. A Dynamic, Interactive Sheet Music Staff
+
+The music staff is no longer just a graphic representation. It is the core interactive engine.
+
+### Feature 1: The Interactive Keyboard/Staff
+* **What it does:** Below the staff, imagine an 88-key piano keyboard overlay.
+* **How it works:** When a user selects a Roman numeral (e.g., ii⁷) in the input, the corresponding keys on the piano light up *and* the staff updates automatically.
+* **Interactive Playback:** Clicking anywhere on the staff or the piano interface plays the chord in real-time, using high-quality piano or orchestral samples.
+
+
+
+### Feature 2: Voice-Leading Analysis (The Advanced Feature)
+
+This is a game-changer. When you are in "Advanced Mode," the staff doesn't just show one chord. It shows the **resolution**.
+* **What it shows:** You analyze `V⁷`. The staff automatically displays **V⁷ → I**, using distinct colors (e.g., green for the leading tone moving to tonic, blue for the seventh moving to the third) to show proper voice leading and to highlight potential parallel fifths or octaves.
+
+[Image showing a musical staff with two chords, V7 and I, where colored lines and arrows trace the correct voice-leading of the individual notes (e.g., the leading tone moving to the tonic).]
+
+---
+
+## 3. The "Progression Builder" (Replacing Single-Lookup)
+
+Instead of one Roman Numeral input, we have a buildable, multi-slot interface.
+
+* **[ I ]** | **[ IV ]** | **[ V⁷ ]** | **[ I ]**
+* **"Add Slot" (+):** Users can build entire common progressions.
+* **Live Update:** As you add numerals, the results card updates to show the analysis of the *entire progression*, not just the individual chord.
+
+### A New Data Point: "Progression Context"
+The details table now includes a section that analyzes the function of the sequence:
+* **PROGRESSION TYPE:** Plagal Cadence, Deceptive Resolution, etc.
+
+---
+
+## 4. Total Redesign of the "Detail Card"
+
+Let's make the data more visual and insightful.
+
+### B. Functional Analysis (Replacing Scale Degree)
+We’re replacing the simple "5 — Dominant" label with a deep, functional analysis.
+* **FUNCTION:** **PRE-DOMINANT → DOMINANT PREPARATION**
+* **VOICE-LEADING TENDENCIES:** (e.g., "The F must resolve down to E.")
+
+### C. Contextual "Modulation Alerts" (The Advanced Feature)
+* If you input a chord that doesn't fit the current key (like a `II#` in C Major), the application triggers a **"Modulation Alert!"**
+* A suggestion panel appears: "This `II#` (D Major) is a common pivot point. **Suggested new key: G Major.** [Explore modulation in G Major?]"
+
+---
+
+### In Summary: From Lookup to Learning
+
+The goal is to shift the application from a simple dictionary of chords to an exploratory **Harmony Lab**. The information isn’t just static data; it’s context-sensitive, visual, and highly interactive, guiding users not just *what* a chord is, but *why* it matters.
