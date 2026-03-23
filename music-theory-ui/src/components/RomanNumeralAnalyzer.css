@@ -129,6 +129,209 @@ button:disabled {
     cursor: not-allowed;
 }
 
+/* ── Input with Help Icon ───────────────────────────────────────── */
+
+.input-with-help {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-help input {
+    width: 100%;
+    padding-right: 2.25rem;
+}
+
+.help-toggle {
+    position: absolute;
+    right: 0.5rem;
+    width: 1.35rem;
+    height: 1.35rem;
+    padding: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition:
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        background var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.help-toggle:hover {
+    color: var(--accent);
+    border-color: var(--accent-muted);
+    background: var(--accent-light);
+    box-shadow: none;
+    transform: none;
+}
+
+/* ── Help Tooltip Popover ───────────────────────────────────────── */
+
+.help-tooltip {
+    position: absolute;
+    top: calc(100% + 0.55rem);
+    left: 0;
+    z-index: 100;
+    width: 320px;
+    padding: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    animation: tooltip-in 0.15s ease;
+}
+
+@keyframes tooltip-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Tooltip Header ─────────────────────────────────────────────── */
+
+.help-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.75rem 0.9rem 0.6rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.help-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.help-subtitle {
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+}
+
+.help-subtitle a {
+    font-weight: 600;
+}
+
+/* ── Tooltip Table ──────────────────────────────────────────────── */
+
+.help-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.help-table thead th {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    padding: 0.45rem 0.9rem 0.3rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-surface);
+}
+
+.help-table tbody td {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    padding: 0.35rem 0.9rem;
+    border-bottom: 1px solid var(--border-light);
+    line-height: 1.5;
+    vertical-align: middle;
+}
+
+.help-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.help-table tbody td:first-child {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.help-table tbody td code {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    background: var(--bg-surface);
+    color: var(--accent);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-light);
+}
+
+/* ── Tooltip Examples ───────────────────────────────────────────── */
+
+.help-examples {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.9rem;
+    border-top: 1px solid var(--border-light);
+    background: var(--bg-surface);
+}
+
+.help-examples-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+.help-examples code {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    background: var(--bg-secondary);
+    color: var(--accent);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-light);
+}
+
+.help-dot {
+    color: var(--text-tertiary);
+    font-size: 0.7rem;
+}
+
+/* ── Tooltip Link ───────────────────────────────────────────────── */
+
+.help-link {
+    display: block;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    border-top: 1px solid var(--border-light);
+    transition:
+        color var(--transition-fast),
+        background var(--transition-fast);
+}
+
+.help-link:hover {
+    color: var(--accent-hover);
+    background: var(--bg-hover);
+}
+
 /* ── Error ──────────────────────────────────────────────────────── */
 
 .error {

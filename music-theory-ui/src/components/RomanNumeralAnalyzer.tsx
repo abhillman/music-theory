@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { musicTheoryClient, chordImageClient } from "../client";
 import { RomanNumeralRequest } from "../gen/musictheory_pb";
 import { RenderRomanNumeralRequest } from "../gen/chordimage_pb";
@@ -79,6 +79,24 @@ export default function RomanNumeralAnalyzer() {
   const [chordSvg, setChordSvg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  // Close tooltip when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        tooltipRef.current &&
+        !tooltipRef.current.contains(e.target as Node)
+      ) {
+        setShowTooltip(false);
+      }
+    }
+    if (showTooltip) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showTooltip]);
 
   const analyze = useCallback(async () => {
     if (!romanNumeral.trim()) return;
@@ -186,15 +204,108 @@ export default function RomanNumeralAnalyzer() {
       <div className="input-row">
         <div className="field">
           <label htmlFor="roman">Roman Numeral</label>
-          <input
-            id="roman"
-            type="text"
-            value={romanNumeral}
-            onChange={(e) => setRomanNumeral(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="e.g. V, viio, IV6, bII"
-            autoFocus
-          />
+          <div className="input-with-help" ref={tooltipRef}>
+            <input
+              id="roman"
+              type="text"
+              value={romanNumeral}
+              onChange={(e) => setRomanNumeral(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="e.g. V, viio, IV6, bII"
+              autoFocus
+            />
+            <button
+              type="button"
+              className="help-toggle"
+              aria-label="Syntax help"
+              onClick={() => setShowTooltip((prev) => !prev)}
+            >
+              ?
+            </button>
+            {showTooltip && (
+              <div className="help-tooltip">
+                <div className="help-header">
+                  <span className="help-title">Syntax Guide</span>
+                  <span className="help-subtitle">
+                    Uses{" "}
+                    <a
+                      href="https://music21.org/music21docs/moduleReference/moduleRoman.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      music21
+                    </a>{" "}
+                    Roman numeral syntax.
+                  </span>
+                </div>
+
+                <table className="help-table">
+                  <thead>
+                    <tr>
+                      <th>Result</th>
+                      <th>Type</th>
+                      <th>Syntax</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Major / Minor</td>
+                      <td>Case</td>
+                      <td>
+                        <code>V</code> / <code>v</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Diminished</td>
+                      <td>Append</td>
+                      <td>
+                        <code>o</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Augmented</td>
+                      <td>Append</td>
+                      <td>
+                        <code>+</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>7th Chord</td>
+                      <td>Append</td>
+                      <td>
+                        <code>7</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Alterations</td>
+                      <td>Chromatic</td>
+                      <td>
+                        <code>b</code> / <code>#</code>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div className="help-examples">
+                  <span className="help-examples-label">Examples:</span>
+                  <span>
+                    <code>viio</code> <span className="help-dot">·</span>{" "}
+                    <code>IV6</code> <span className="help-dot">·</span>{" "}
+                    <code>bII</code>
+                  </span>
+                </div>
+
+                <a
+                  className="help-link"
+                  href="https://learnmusictheory.net/PDFs/pdffiles/01-05-02-RomanNumerals.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Roman numeral cheat-sheet ↗
+                </a>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="field">
