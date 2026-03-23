@@ -18,6 +18,7 @@ ux
 * add additional information about chords from proto that comes from the music theory service
 * fix if someone writes something non-sensical
     * eg `Vo` should be re-written as `vo`
+* add accessibility
 
 technical
 * add the ability to deploy
